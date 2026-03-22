@@ -1,0 +1,54 @@
+diff --git a/node_modules/@expo/log-box/android/src/main/expo/modules/logbox/ExpoLogBoxDevSupportManager.kt b/node_modules/@expo/log-box/android/src/main/expo/modules/logbox/ExpoLogBoxDevSupportManager.kt
+index b6df88d..ec68689 100644
+--- a/node_modules/@expo/log-box/android/src/main/expo/modules/logbox/ExpoLogBoxDevSupportManager.kt
++++ b/node_modules/@expo/log-box/android/src/main/expo/modules/logbox/ExpoLogBoxDevSupportManager.kt
+@@ -23,8 +23,8 @@ import com.facebook.react.devsupport.interfaces.DevSupportManager
+ import com.facebook.react.devsupport.interfaces.PausedInDebuggerOverlayManager
+ import com.facebook.react.devsupport.interfaces.RedBoxHandler
+ import com.facebook.react.packagerconnection.RequestHandler
+-import com.facebook.react.devsupport.StackTraceHelper.convertJavaStackTrace
+ import com.facebook.react.devsupport.StackTraceHelper.convertJsStackTrace
++import com.facebook.react.devsupport.interfaces.DevSplitBundleCallback
+ import com.facebook.react.devsupport.interfaces.StackFrame
+ 
+ class ExpoLogBoxDevSupportManager(
+@@ -55,23 +55,21 @@ class ExpoLogBoxDevSupportManager(
+   ) {
+ 
+   private var redBoxSurfaceDelegate: SurfaceDelegate? = null
++  private var localErrorTitle: String? = null
++  private var localErrorStack: Array<StackFrame>? = null
+ 
+   override fun hideRedboxDialog() {
+     redBoxSurfaceDelegate?.hide()
+   }
+ 
+-  override fun showNewJavaError(message: String?, e: Throwable) {
+-    showNewError(message, convertJavaStackTrace(e))
+-  }
+-
+   override fun showNewJSError(message: String?, details: ReadableArray?, errorCookie: Int) {
+     showNewError(message, convertJsStackTrace(details))
+   }
+ 
+   private fun showNewError(message: String?, stack: Array<StackFrame>) {
+     UiThreadUtil.runOnUiThread {
+-      lastErrorTitle = message
+-      lastErrorStack = stack
++      localErrorTitle = message
++      localErrorStack = stack
+ 
+       if (redBoxSurfaceDelegate == null) {
+         this.redBoxSurfaceDelegate =
+@@ -125,8 +123,9 @@ open class ExpoBridgelessDevSupportManager(
+     pausedInDebuggerOverlayManager
+   ) {
+ 
+-  override val uniqueTag: String
+-    get() = "Bridgeless"
++  override fun getUniqueTag(): String = "Bridgeless"
++
++  override fun loadSplitBundleFromServer(bundlePath: String, callback: DevSplitBundleCallback): Unit = Unit
+ 
+   override fun handleReloadJS() {
+     UiThreadUtil.assertOnUiThread()
