@@ -166,8 +166,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0f0f0f' },
   content: { padding: 20, gap: 16, paddingBottom: 48 },
 
-  headline: { fontSize: 24, fontWeight: '700', color: '#fff' },
-  subheadline: { fontSize: 14, color: '#555', textTransform: 'capitalize', marginTop: -10 },
+  headline: { fontSize: 24, fontWeight: '700', color: '#fff', marginBottom: 2 },
+  subheadline: { fontSize: 14, color: '#555', textTransform: 'capitalize' },
 
   statsCard: {
     backgroundColor: '#1a1a1a', borderRadius: 14, borderWidth: 1, borderColor: '#2a2a2a',
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a', borderRadius: 14, borderWidth: 1, borderColor: '#2a2a2a',
     padding: 16, gap: 10,
   },
-  insightsTitle: { fontSize: 13, fontWeight: '600', color: '#555', marginBottom: 2 },
+  insightsTitle: { fontSize: 13, fontWeight: '600', color: '#4ade80', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 2 },
 
   skeletonContainer: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8 },
   skeletonText: { fontSize: 14, color: '#555' },
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a', borderRadius: 14, borderWidth: 1, borderColor: '#2a2a2a',
     padding: 16, gap: 6,
   },
-  placeholderTitle: { fontSize: 13, fontWeight: '600', color: '#555' },
+  placeholderTitle: { fontSize: 13, fontWeight: '600', color: '#4ade80', textTransform: 'uppercase', letterSpacing: 0.8 },
   placeholderText: { fontSize: 14, color: '#444', lineHeight: 20 },
 
   historyBtn: {
