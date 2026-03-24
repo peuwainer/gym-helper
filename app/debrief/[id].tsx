@@ -87,7 +87,7 @@ export default function DebriefScreen() {
     <>
       <Stack.Screen options={{ title: 'Debrief', headerBackTitle: 'Voltar' }} />
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.headline}>Treino finalizado 💪</Text>
+        <Text style={styles.headline}>Treino finalizado</Text>
         <Text style={styles.subheadline}>{date}</Text>
 
         {/* Stats card */}
