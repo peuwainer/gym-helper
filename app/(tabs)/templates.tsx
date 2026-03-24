@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   cardActions: {
-    flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#222',
+    flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#2a2a2a',
   },
   actionBtn: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
