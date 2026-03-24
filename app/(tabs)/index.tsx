@@ -10,6 +10,7 @@ import { ChatMessage, WorkoutTemplate } from '../../types';
 import { sendMessage } from '../../lib/claude';
 import { getApiKey } from '../../lib/storage';
 import { saveChatMessage, getChatHistory, clearChatHistory, saveTemplate } from '../../lib/db';
+import { ExerciseImage } from '../../components/ExerciseImage';
 
 function WorkoutCard({ workout, onStart, onSave }: {
   workout: WorkoutTemplate;
@@ -24,9 +25,12 @@ function WorkoutCard({ workout, onStart, onSave }: {
       ) : null}
       <View style={styles.exerciseList}>
         {workout.exercises.map((ex, i) => (
-          <Text key={i} style={styles.exerciseItem}>
-            • {ex.exercise.name} — {ex.sets}x{ex.reps}
-          </Text>
+          <View key={i} style={styles.exerciseRow}>
+            <ExerciseImage exerciseName={ex.exercise.name} exerciseNameEn={ex.exercise.nameEn} size={32} />
+            <Text style={styles.exerciseItem}>
+              {ex.exercise.name} — {ex.sets}x{ex.reps}
+            </Text>
+          </View>
         ))}
       </View>
       <View style={styles.workoutActions}>
@@ -172,7 +176,7 @@ export default function ChatScreen() {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={90}
+      keyboardVerticalOffset={0}
     >
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Treinador IA</Text>
@@ -271,8 +275,9 @@ const styles = StyleSheet.create({
   },
   workoutTitle: { fontSize: 17, fontWeight: '700', color: '#4ade80', marginBottom: 4 },
   workoutDesc: { fontSize: 13, color: '#888', marginBottom: 10 },
-  exerciseList: { gap: 4, marginBottom: 12 },
-  exerciseItem: { fontSize: 14, color: '#ccc' },
+  exerciseList: { gap: 8, marginBottom: 12 },
+  exerciseRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  exerciseItem: { fontSize: 14, color: '#ccc', flex: 1 },
   workoutActions: { flexDirection: 'row', gap: 8 },
   btnStart: {
     flexDirection: 'row', alignItems: 'center', gap: 6,

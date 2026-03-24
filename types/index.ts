@@ -1,6 +1,7 @@
 export interface Exercise {
   id: number;
   name: string;
+  nameEn?: string;
   category: string;
   muscles: string[];
   description: string;
@@ -34,6 +35,7 @@ export interface SetLog {
 export interface ExerciseLog {
   exerciseId: number;
   exerciseName: string;
+  exerciseNameEn?: string;
   targetSets: number;
   targetReps: number;
   sets: SetLog[];

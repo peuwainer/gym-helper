@@ -6,6 +6,11 @@ jest.mock('react-native', () => ({
   Platform: { OS: 'ios' },
 }));
 
+// Mock exercise-images to avoid pulling in expo-sqlite native modules
+jest.mock('../lib/exercise-images', () => ({
+  resolveExerciseImage: jest.fn().mockResolvedValue(null),
+}));
+
 const mockSessions: WorkoutSession[] = [
   {
     id: 1,

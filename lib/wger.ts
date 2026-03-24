@@ -11,15 +11,19 @@ export interface WgerExercise {
 }
 
 export async function searchExercises(query: string, language = 'english'): Promise<WgerExercise[]> {
+  const url = `${BASE_URL}/exercise/search/?term=${encodeURIComponent(query)}&language=${language}&format=json`;
+  console.log('[wger] searching:', url);
   try {
-    const res = await fetch(
-      `${BASE_URL}/exercise/search/?term=${encodeURIComponent(query)}&language=${language}&format=json`,
-      { headers: { 'Accept': 'application/json' } }
-    );
-    if (!res.ok) return [];
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) {
+      console.log('[wger] search failed, status:', res.status);
+      return [];
+    }
     const data = await res.json();
+    console.log('[wger] search result:', data.suggestions?.length ?? 0, 'suggestions');
     return data.suggestions || [];
-  } catch {
+  } catch (e) {
+    console.log('[wger] search error:', e);
     return [];
   }
 }

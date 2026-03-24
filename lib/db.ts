@@ -49,6 +49,13 @@ async function initDb(db: SQLite.SQLiteDatabase) {
       workout_json TEXT,
       timestamp TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS exercise_image_cache (
+      exercise_name TEXT PRIMARY KEY COLLATE NOCASE,
+      image_url TEXT NOT NULL,
+      wger_exercise_id INTEGER,
+      cached_at TEXT NOT NULL
+    );
   `);
 }
 
@@ -210,4 +217,24 @@ export async function getChatHistory(limit = 50): Promise<any[]> {
 export async function clearChatHistory(): Promise<void> {
   const db = await getDb();
   await db.runAsync('DELETE FROM chat_history');
+}
+
+// Exercise image cache
+export async function getCachedExerciseImage(name: string): Promise<{ imageUrl: string; wgerExerciseId: number | null } | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<any>(
+    'SELECT image_url, wger_exercise_id FROM exercise_image_cache WHERE exercise_name = ?',
+    [name]
+  );
+  if (!row) return null;
+  return { imageUrl: row.image_url, wgerExerciseId: row.wger_exercise_id };
+}
+
+export async function cacheExerciseImage(name: string, imageUrl: string, wgerExerciseId?: number): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    `INSERT OR REPLACE INTO exercise_image_cache (exercise_name, image_url, wger_exercise_id, cached_at)
+     VALUES (?, ?, ?, ?)`,
+    [name, imageUrl, wgerExerciseId ?? null, new Date().toISOString()]
+  );
 }

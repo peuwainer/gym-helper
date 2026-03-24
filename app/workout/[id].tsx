@@ -7,6 +7,7 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Check, X, ChevronDown, ChevronUp, Info } from 'lucide-react-native';
 import { WorkoutTemplate, ExerciseLog, SetLog } from '../../types';
 import { getTemplate, saveSession, getLastWeights } from '../../lib/db';
+import { ExerciseImage } from '../../components/ExerciseImage';
 
 function SetRow({
   set,
@@ -82,6 +83,7 @@ function ExercisePanel({
   return (
     <View style={[styles.exercisePanel, allDone && styles.exercisePanelDone]}>
       <TouchableOpacity style={styles.exerciseHeader} onPress={() => setExpanded(v => !v)}>
+        <ExerciseImage exerciseName={log.exerciseName} exerciseNameEn={log.exerciseNameEn} size={48} />
         <View style={styles.exerciseHeaderLeft}>
           <Text style={styles.exerciseName}>{log.exerciseName}</Text>
           <Text style={styles.exerciseMeta}>
@@ -143,6 +145,7 @@ export default function WorkoutScreen() {
     const initialLogs: ExerciseLog[] = t.exercises.map(ex => ({
       exerciseId: ex.exercise.id,
       exerciseName: ex.exercise.name,
+      exerciseNameEn: ex.exercise.nameEn,
       targetSets: ex.sets,
       targetReps: ex.reps,
       sets: Array.from({ length: ex.sets }, (_, i) => ({
@@ -243,7 +246,7 @@ const styles = StyleSheet.create({
   exercisePanelDone: { borderColor: '#1f4d2e' },
   exerciseHeader: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    padding: 14,
+    padding: 14, gap: 12,
   },
   exerciseHeaderLeft: { flex: 1 },
   exerciseName: { fontSize: 16, fontWeight: '600', color: '#fff', marginBottom: 2 },

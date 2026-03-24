@@ -21,7 +21,8 @@
         "backgroundColor": "#0f0f0f",
         "foregroundImage": "./assets/android-icon-foreground.png"
       },
-      "package": "com.gymhelper.app"
+      "package": "com.gymhelper.app",
+      "navigationBarColor": "#1a1a1a"
     },
     "web": {
       "favicon": "./assets/favicon.png",

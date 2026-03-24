@@ -1,7 +1,19 @@
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import * as NavigationBar from 'expo-navigation-bar';
+import * as SystemUI from 'expo-system-ui';
 
 export default function RootLayout() {
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync('#0f0f0f');
+    if (Platform.OS === 'android') {
+      NavigationBar.setBackgroundColorAsync('#1a1a1a');
+      NavigationBar.setButtonStyleAsync('light');
+    }
+  }, []);
+
   return (
     <>
       <StatusBar style="light" />

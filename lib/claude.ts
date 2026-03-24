@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { WorkoutTemplate, WorkoutSession } from '../types';
+import { resolveExerciseImage } from './exercise-images';
 
 const API_URL = Platform.OS === 'web'
   ? 'http://localhost:3001/api/messages'
@@ -18,6 +19,7 @@ When the user asks for a workout, you MUST respond with a JSON block followed by
       "exercise": {
         "id": 1,
         "name": "Nome do Exercício",
+        "nameEn": "Exercise Name in English",
         "category": "Categoria (ex: Peito, Costas, Pernas, Ombros, Bíceps, Tríceps, Core, Cardio)",
         "muscles": ["músculo primário", "músculo secundário"],
         "description": "Como executar o exercício corretamente",
@@ -113,6 +115,13 @@ export async function sendMessage(
       text = rawText.replace(/<workout>[\s\S]*?<\/workout>/, '').trim();
     } catch (e) {
       console.warn('Failed to parse workout JSON', e);
+    }
+  }
+
+  // Pre-cache exercise images (fire-and-forget)
+  if (workout) {
+    for (const ex of workout.exercises) {
+      resolveExerciseImage(ex.exercise.name, ex.exercise.nameEn).catch(() => {});
     }
   }
 
