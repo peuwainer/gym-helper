@@ -6,7 +6,7 @@ import {
 import { useFocusEffect, useRouter } from 'expo-router';
 import { WorkoutSession } from '../../types';
 import { getSessions } from '../../lib/db';
-import { ChevronRight } from 'lucide-react-native';
+import { ChevronRight, Calendar } from 'lucide-react-native';
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -88,7 +88,9 @@ export default function HistoryScreen() {
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text style={styles.emptyIcon}>📅</Text>
+            <View style={styles.emptyIconWrap}>
+              <Calendar size={28} color="#555" />
+            </View>
             <Text style={styles.emptyTitle}>Nenhum treino realizado ainda</Text>
             <Text style={styles.emptyText}>
               Complete seu primeiro treino e ele aparecerá aqui.
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 12, color: '#555' },
   metaDot: { fontSize: 12, color: '#333' },
   empty: { alignItems: 'center', paddingTop: 80, paddingHorizontal: 32 },
-  emptyIcon: { fontSize: 40, marginBottom: 14 },
+  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: '#1a1a1a', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
   emptyTitle: { fontSize: 17, fontWeight: '600', color: '#fff', marginBottom: 8 },
   emptyText: { fontSize: 14, color: '#666', textAlign: 'center', lineHeight: 22 },
 });

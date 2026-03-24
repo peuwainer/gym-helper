@@ -4,7 +4,7 @@ import {
   StyleSheet, Alert,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { Plus, Play, Pencil, Trash2, ChevronRight } from 'lucide-react-native';
+import { Plus, Play, Pencil, Trash2, ChevronRight, Dumbbell } from 'lucide-react-native';
 import { WorkoutTemplate } from '../../types';
 import { getTemplates, deleteTemplate } from '../../lib/db';
 
@@ -111,7 +111,9 @@ export default function TemplatesScreen() {
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text style={styles.emptyIcon}>📋</Text>
+            <View style={styles.emptyIconWrap}>
+              <Dumbbell size={28} color="#555" />
+            </View>
             <Text style={styles.emptyTitle}>Nenhum treino salvo</Text>
             <Text style={styles.emptyText}>
               Peça um treino para o treinador IA e salve-o aqui, ou crie um manualmente.
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
   },
   actionText: { fontSize: 13, color: '#888' },
   empty: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 32 },
-  emptyIcon: { fontSize: 40, marginBottom: 14 },
+  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: '#1a1a1a', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
   emptyTitle: { fontSize: 17, fontWeight: '600', color: '#fff', marginBottom: 8 },
   emptyText: { fontSize: 14, color: '#666', textAlign: 'center', lineHeight: 22 },
 });
