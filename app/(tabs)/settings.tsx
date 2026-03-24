@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#2a2a2a', paddingHorizontal: 12,
   },
   input: { flex: 1, color: '#fff', fontSize: 14, paddingVertical: 12, fontFamily: 'monospace' },
-  eyeBtn: { padding: 4 },
+  eyeBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
   keyActions: { flexDirection: 'row', gap: 10 },
   saveBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
