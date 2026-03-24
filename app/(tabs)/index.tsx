@@ -7,6 +7,7 @@ import {
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Send, Trash2, Play } from 'lucide-react-native';
 import { ChatMessage, WorkoutTemplate } from '../../types';
+import { colors } from '../../lib/theme';
 import { sendMessage } from '../../lib/claude';
 import { getApiKey } from '../../lib/storage';
 import { saveChatMessage, getChatHistory, clearChatHistory, saveTemplate } from '../../lib/db';
@@ -250,66 +251,66 @@ export default function ChatScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
+  container: { flex: 1, backgroundColor: colors.bg },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingHorizontal: 16, paddingTop: 56, paddingBottom: 12,
-    backgroundColor: '#0f0f0f',
+    backgroundColor: colors.bg,
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#fff' },
+  headerTitle: { fontSize: 20, fontWeight: '700', color: colors.text },
   banner: {
-    backgroundColor: '#1a1a1a', borderLeftWidth: 3, borderLeftColor: '#4ade80',
+    backgroundColor: colors.surface, borderLeftWidth: 3, borderLeftColor: colors.accent,
     marginHorizontal: 16, marginBottom: 8, padding: 12, borderRadius: 8,
   },
-  bannerText: { color: '#aaa', fontSize: 13 },
+  bannerText: { color: colors.textSecondary, fontSize: 13 },
   messageList: { padding: 16, gap: 12, paddingBottom: 8 },
   bubble: { maxWidth: '92%', borderRadius: 16, padding: 12 },
-  bubbleUser: { alignSelf: 'flex-end', backgroundColor: '#1e3a2f' },
-  bubbleAssistant: { alignSelf: 'flex-start', backgroundColor: '#1a1a1a' },
+  bubbleUser: { alignSelf: 'flex-end', backgroundColor: colors.userBubbleBg },
+  bubbleAssistant: { alignSelf: 'flex-start', backgroundColor: colors.surface },
   bubbleText: { fontSize: 15, lineHeight: 22 },
-  bubbleTextUser: { color: '#e2f5e9' },
-  bubbleTextAssistant: { color: '#e0e0e0' },
+  bubbleTextUser: { color: colors.userBubbleText },
+  bubbleTextAssistant: { color: colors.assistantBubbleText },
   workoutCard: {
-    backgroundColor: '#111', borderRadius: 12, padding: 14,
-    marginBottom: 8, borderWidth: 1, borderColor: '#2a2a2a',
+    backgroundColor: colors.surface2, borderRadius: 12, padding: 14,
+    marginBottom: 8, borderWidth: 1, borderColor: colors.border,
   },
-  workoutTitle: { fontSize: 17, fontWeight: '700', color: '#4ade80', marginBottom: 4 },
-  workoutDesc: { fontSize: 13, color: '#888', marginBottom: 10 },
+  workoutTitle: { fontSize: 17, fontWeight: '700', color: colors.accent, marginBottom: 4 },
+  workoutDesc: { fontSize: 13, color: colors.textMuted, marginBottom: 10 },
   exerciseList: { gap: 8, marginBottom: 12 },
   exerciseRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  exerciseItem: { fontSize: 14, color: '#ccc', flex: 1 },
+  exerciseItem: { fontSize: 14, color: colors.textSecondary, flex: 1 },
   workoutActions: { flexDirection: 'row', gap: 8 },
   btnStart: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: '#4ade80', paddingHorizontal: 16, paddingVertical: 8,
+    backgroundColor: colors.accent, paddingHorizontal: 16, paddingVertical: 8,
     borderRadius: 8, flex: 1, justifyContent: 'center',
   },
-  btnStartText: { color: '#0f0f0f', fontWeight: '700', fontSize: 14 },
+  btnStartText: { color: colors.bg, fontWeight: '700', fontSize: 14 },
   btnSave: {
-    borderWidth: 1, borderColor: '#2a2a2a', paddingHorizontal: 12, paddingVertical: 8,
+    borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12, paddingVertical: 8,
     borderRadius: 8, flex: 1, alignItems: 'center',
   },
-  btnSaveText: { color: '#888', fontSize: 13 },
+  btnSaveText: { color: colors.textMuted, fontSize: 13 },
   inputRow: {
     flexDirection: 'row', padding: 12, gap: 8,
-    backgroundColor: '#0f0f0f', borderTopWidth: 1, borderTopColor: '#1a1a1a',
+    backgroundColor: colors.bg, borderTopWidth: 1, borderTopColor: colors.surface,
   },
   input: {
-    flex: 1, backgroundColor: '#1a1a1a', borderRadius: 12,
-    paddingHorizontal: 14, paddingVertical: 10, color: '#fff',
-    fontSize: 15, maxHeight: 100, borderWidth: 1, borderColor: '#2a2a2a',
+    flex: 1, backgroundColor: colors.surface, borderRadius: 12,
+    paddingHorizontal: 14, paddingVertical: 10, color: colors.text,
+    fontSize: 15, maxHeight: 100, borderWidth: 1, borderColor: colors.border,
   },
   sendBtn: {
-    width: 44, height: 44, borderRadius: 12, backgroundColor: '#4ade80',
+    width: 44, height: 44, borderRadius: 12, backgroundColor: colors.accent,
     alignItems: 'center', justifyContent: 'center', alignSelf: 'flex-end',
   },
-  sendBtnDisabled: { backgroundColor: '#1f3828', opacity: 0.5 },
+  sendBtnDisabled: { backgroundColor: colors.accentDisabled, opacity: 0.5 },
   empty: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 32 },
   emptyIcon: { fontSize: 48, marginBottom: 16 },
-  emptyTitle: { fontSize: 18, fontWeight: '600', color: '#fff', marginBottom: 12, textAlign: 'center' },
-  emptyText: { fontSize: 14, color: '#888', textAlign: 'center', lineHeight: 22, marginBottom: 16 },
+  emptyTitle: { fontSize: 18, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: 'center' },
+  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22, marginBottom: 16 },
   emptyExample: {
-    fontSize: 13, color: '#555', textAlign: 'center', lineHeight: 20,
-    fontStyle: 'italic', backgroundColor: '#1a1a1a', padding: 12, borderRadius: 8,
+    fontSize: 13, color: colors.textSubtle, textAlign: 'center', lineHeight: 20,
+    fontStyle: 'italic', backgroundColor: colors.surface, padding: 12, borderRadius: 8,
   },
 });

@@ -7,6 +7,7 @@ import { useFocusEffect } from 'expo-router';
 import { Eye, EyeOff, Check, Trash2 } from 'lucide-react-native';
 import { getApiKey, setApiKey, clearApiKey } from '../../lib/storage';
 import { clearChatHistory } from '../../lib/db';
+import { colors } from '../../lib/theme';
 
 export default function SettingsScreen() {
   const [apiKey, setApiKeyState] = useState('');
@@ -72,15 +73,15 @@ export default function SettingsScreen() {
             value={apiKey}
             onChangeText={k => { setApiKeyState(k); setSaved(false); }}
             placeholder="sk-ant-..."
-            placeholderTextColor="#333"
+            placeholderTextColor={colors.textDisabled}
             secureTextEntry={!showKey}
             autoCapitalize="none"
             autoCorrect={false}
           />
           <TouchableOpacity style={styles.eyeBtn} onPress={() => setShowKey(v => !v)}>
             {showKey
-              ? <EyeOff size={18} color="#555" />
-              : <Eye size={18} color="#555" />
+              ? <EyeOff size={18} color={colors.textSubtle} />
+              : <Eye size={18} color={colors.textSubtle} />
             }
           </TouchableOpacity>
         </View>
@@ -90,7 +91,7 @@ export default function SettingsScreen() {
             style={[styles.saveBtn, saved && styles.saveBtnSaved]}
             onPress={handleSave}
           >
-            {saved && <Check size={16} color="#0f0f0f" />}
+            {saved && <Check size={16} color={colors.bg} />}
             <Text style={styles.saveBtnText}>{saved ? 'Salvo' : 'Salvar'}</Text>
           </TouchableOpacity>
           {saved && (
@@ -112,7 +113,7 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>Dados</Text>
 
         <TouchableOpacity style={styles.dangerBtn} onPress={handleClearHistory}>
-          <Trash2 size={16} color="#ef4444" />
+          <Trash2 size={16} color={colors.error} />
           <Text style={styles.dangerText}>Limpar histórico de chat</Text>
         </TouchableOpacity>
       </View>
@@ -129,44 +130,44 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
+  container: { flex: 1, backgroundColor: colors.bg },
   content: { padding: 20, gap: 8, paddingBottom: 60 },
   section: {
-    backgroundColor: '#1a1a1a', borderRadius: 14,
-    borderWidth: 1, borderColor: '#2a2a2a', padding: 16, gap: 10,
+    backgroundColor: colors.surface, borderRadius: 14,
+    borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10,
     marginBottom: 12,
   },
-  sectionTitle: { fontSize: 13, fontWeight: '600', color: '#4ade80', textTransform: 'uppercase', letterSpacing: 0.8 },
-  sectionDesc: { fontSize: 13, color: '#666', lineHeight: 19 },
+  sectionTitle: { fontSize: 13, fontWeight: '600', color: colors.accent, textTransform: 'uppercase', letterSpacing: 0.8 },
+  sectionDesc: { fontSize: 13, color: colors.textMuted, lineHeight: 19 },
   inputRow: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
-    backgroundColor: '#111', borderRadius: 10,
-    borderWidth: 1, borderColor: '#2a2a2a', paddingHorizontal: 12,
+    backgroundColor: colors.surface2, borderRadius: 10,
+    borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12,
   },
-  input: { flex: 1, color: '#fff', fontSize: 14, paddingVertical: 12, fontFamily: 'monospace' },
+  input: { flex: 1, color: colors.text, fontSize: 14, paddingVertical: 12, fontFamily: 'monospace' },
   eyeBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
   keyActions: { flexDirection: 'row', gap: 10 },
   saveBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: '#4ade80', paddingHorizontal: 20, paddingVertical: 10,
+    backgroundColor: colors.accent, paddingHorizontal: 20, paddingVertical: 10,
     borderRadius: 8,
   },
-  saveBtnSaved: { backgroundColor: '#22c55e' },
-  saveBtnText: { color: '#0f0f0f', fontWeight: '700', fontSize: 14 },
+  saveBtnSaved: { backgroundColor: colors.accentDark },
+  saveBtnText: { color: colors.bg, fontWeight: '700', fontSize: 14 },
   clearKeyBtn: {
-    borderWidth: 1, borderColor: '#2a2a2a', paddingHorizontal: 16, paddingVertical: 10,
+    borderWidth: 1, borderColor: colors.border, paddingHorizontal: 16, paddingVertical: 10,
     borderRadius: 8, alignItems: 'center', justifyContent: 'center',
   },
-  clearKeyText: { color: '#666', fontSize: 14 },
+  clearKeyText: { color: colors.textMuted, fontSize: 14 },
   hint: {
-    backgroundColor: '#111', borderRadius: 8, padding: 12,
-    borderWidth: 1, borderColor: '#222',
+    backgroundColor: colors.surface2, borderRadius: 8, padding: 12,
+    borderWidth: 1, borderColor: colors.border,
   },
-  hintText: { fontSize: 12, color: '#555', lineHeight: 18 },
+  hintText: { fontSize: 12, color: colors.textSubtle, lineHeight: 18 },
   dangerBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#2a2a2a',
+    padding: 12, borderRadius: 8, borderWidth: 1, borderColor: colors.border,
   },
-  dangerText: { color: '#ef4444', fontSize: 14 },
-  aboutText: { fontSize: 13, color: '#555', lineHeight: 22 },
+  dangerText: { color: colors.error, fontSize: 14 },
+  aboutText: { fontSize: 13, color: colors.textSubtle, lineHeight: 22 },
 });

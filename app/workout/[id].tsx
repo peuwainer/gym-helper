@@ -8,6 +8,7 @@ import { Check, X, ChevronDown, ChevronUp, Info } from 'lucide-react-native';
 import { WorkoutTemplate, ExerciseLog, SetLog } from '../../types';
 import { getTemplate, saveSession, getLastWeights } from '../../lib/db';
 import { ExerciseImage } from '../../components/ExerciseImage';
+import { colors } from '../../lib/theme';
 
 function SetRow({
   set,
@@ -31,7 +32,7 @@ function SetRow({
           value={set.weight > 0 ? set.weight.toString() : ''}
           onChangeText={v => onChange({ ...set, weight: parseFloat(v) || 0 })}
           placeholder={lastWeight ? lastWeight.toString() : '0'}
-          placeholderTextColor="#444"
+          placeholderTextColor={colors.textDisabled}
           keyboardType="decimal-pad"
           editable={!set.completed}
         />
@@ -44,7 +45,7 @@ function SetRow({
           value={set.repsCompleted > 0 ? set.repsCompleted.toString() : ''}
           onChangeText={v => onChange({ ...set, repsCompleted: parseInt(v) || 0 })}
           placeholder={set.repsCompleted.toString()}
-          placeholderTextColor="#444"
+          placeholderTextColor={colors.textDisabled}
           keyboardType="number-pad"
           editable={!set.completed}
         />
@@ -54,7 +55,7 @@ function SetRow({
         style={[styles.checkBtn, set.completed && styles.checkBtnDone]}
         onPress={() => onChange({ ...set, completed: !set.completed })}
       >
-        {set.completed ? <Check size={16} color="#0f0f0f" /> : <Check size={16} color="#333" />}
+        {set.completed ? <Check size={16} color={colors.bg} /> : <Check size={16} color={colors.textDisabled} />}
       </TouchableOpacity>
     </View>
   );
@@ -94,7 +95,7 @@ function ExercisePanel({
         <View style={styles.exerciseHeaderRight}>
           {allDone && <View style={styles.donePill}><Text style={styles.donePillText}>✓</Text></View>}
           <Text style={styles.setsProgress}>{completedSets}/{log.sets.length}</Text>
-          {expanded ? <ChevronUp size={16} color="#555" /> : <ChevronDown size={16} color="#555" />}
+          {expanded ? <ChevronUp size={16} color={colors.textSubtle} /> : <ChevronDown size={16} color={colors.textSubtle} />}
         </View>
       </TouchableOpacity>
 
@@ -200,7 +201,7 @@ export default function WorkoutScreen() {
     <>
       <Stack.Screen options={{ title: template.name, headerLeft: () => (
         <TouchableOpacity onPress={handleQuit}>
-          <X size={20} color="#ef4444" />
+          <X size={20} color={colors.error} />
         </TouchableOpacity>
       )}} />
 
@@ -224,7 +225,7 @@ export default function WorkoutScreen() {
           ))}
 
           <TouchableOpacity style={styles.finishBtn} onPress={handleFinish}>
-            <Check size={20} color="#0f0f0f" />
+            <Check size={20} color={colors.bg} />
             <Text style={styles.finishText}>Finalizar Treino</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -234,56 +235,56 @@ export default function WorkoutScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
-  progressBar: { height: 3, backgroundColor: '#1a1a1a' },
-  progressFill: { height: 3, backgroundColor: '#4ade80', borderRadius: 2 },
-  progressText: { fontSize: 12, color: '#555', textAlign: 'center', paddingVertical: 6 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  progressBar: { height: 3, backgroundColor: colors.surface },
+  progressFill: { height: 3, backgroundColor: colors.accent, borderRadius: 2 },
+  progressText: { fontSize: 12, color: colors.textSubtle, textAlign: 'center', paddingVertical: 6 },
   list: { padding: 16, gap: 12, paddingBottom: 40 },
   exercisePanel: {
-    backgroundColor: '#1a1a1a', borderRadius: 14,
-    borderWidth: 1, borderColor: '#2a2a2a', overflow: 'hidden',
+    backgroundColor: colors.surface, borderRadius: 14,
+    borderWidth: 1, borderColor: colors.border, overflow: 'hidden',
   },
-  exercisePanelDone: { borderColor: '#1f4d2e' },
+  exercisePanelDone: { borderColor: colors.accentBorder },
   exerciseHeader: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     padding: 14, gap: 12,
   },
   exerciseHeaderLeft: { flex: 1 },
-  exerciseName: { fontSize: 16, fontWeight: '600', color: '#fff', marginBottom: 2 },
-  exerciseMeta: { fontSize: 12, color: '#555' },
+  exerciseName: { fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 2 },
+  exerciseMeta: { fontSize: 12, color: colors.textSubtle },
   exerciseHeaderRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   donePill: {
-    backgroundColor: '#4ade80', borderRadius: 10,
+    backgroundColor: colors.accent, borderRadius: 10,
     paddingHorizontal: 6, paddingVertical: 2,
   },
-  donePillText: { fontSize: 11, color: '#0f0f0f', fontWeight: '700' },
-  setsProgress: { fontSize: 13, color: '#555' },
+  donePillText: { fontSize: 11, color: colors.bg, fontWeight: '700' },
+  setsProgress: { fontSize: 13, color: colors.textSubtle },
   setsContainer: { padding: 14, paddingTop: 0 },
   setHeader: {
     flexDirection: 'row', paddingBottom: 6,
-    borderBottomWidth: 1, borderBottomColor: '#222', marginBottom: 6,
+    borderBottomWidth: 1, borderBottomColor: colors.border, marginBottom: 6,
   },
   setRow: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
     paddingVertical: 6, borderRadius: 8, paddingHorizontal: 4,
   },
-  setRowDone: { backgroundColor: '#0d2016' },
-  setNumber: { width: 20, fontSize: 13, color: '#444', textAlign: 'center' },
+  setRowDone: { backgroundColor: colors.accentSurface },
+  setNumber: { width: 20, fontSize: 13, color: colors.textDisabled, textAlign: 'center' },
   setField: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 },
-  setLabel: { fontSize: 11, color: '#444' },
+  setLabel: { fontSize: 11, color: colors.textDisabled },
   setInput: {
-    flex: 1, backgroundColor: '#111', borderRadius: 6, padding: 6,
-    color: '#fff', fontSize: 15, fontWeight: '600', textAlign: 'center',
-    borderWidth: 1, borderColor: '#2a2a2a',
+    flex: 1, backgroundColor: colors.surface2, borderRadius: 6, padding: 6,
+    color: colors.text, fontSize: 15, fontWeight: '600', textAlign: 'center',
+    borderWidth: 1, borderColor: colors.border,
   },
   checkBtn: {
-    width: 32, height: 32, borderRadius: 8, borderWidth: 1, borderColor: '#2a2a2a',
+    width: 32, height: 32, borderRadius: 8, borderWidth: 1, borderColor: colors.border,
     alignItems: 'center', justifyContent: 'center',
   },
-  checkBtnDone: { backgroundColor: '#4ade80', borderColor: '#4ade80' },
+  checkBtnDone: { backgroundColor: colors.accent, borderColor: colors.accent },
   finishBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
-    backgroundColor: '#4ade80', padding: 16, borderRadius: 14, marginTop: 8,
+    backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
   },
-  finishText: { fontSize: 16, fontWeight: '700', color: '#0f0f0f' },
+  finishText: { fontSize: 16, fontWeight: '700', color: colors.bg },
 });

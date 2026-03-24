@@ -7,6 +7,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { WorkoutSession } from '../../types';
 import { getSessions } from '../../lib/db';
 import { ChevronRight, Calendar } from 'lucide-react-native';
+import { colors } from '../../lib/theme';
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -59,7 +60,7 @@ function SessionCard({ session, onPress }: { session: WorkoutSession; onPress: (
           )}
         </View>
       </View>
-      <ChevronRight size={16} color="#444" />
+      <ChevronRight size={16} color={colors.textDisabled} />
     </TouchableOpacity>
   );
 }
@@ -89,7 +90,7 @@ export default function HistoryScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <View style={styles.emptyIconWrap}>
-              <Calendar size={28} color="#555" />
+              <Calendar size={28} color={colors.textSubtle} />
             </View>
             <Text style={styles.emptyTitle}>Nenhum treino realizado ainda</Text>
             <Text style={styles.emptyText}>
@@ -103,28 +104,28 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
+  container: { flex: 1, backgroundColor: colors.bg },
   list: { padding: 16, gap: 10, paddingBottom: 32 },
   card: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
-    backgroundColor: '#1a1a1a', padding: 14, borderRadius: 14,
-    borderWidth: 1, borderColor: '#2a2a2a',
+    backgroundColor: colors.surface, padding: 14, borderRadius: 14,
+    borderWidth: 1, borderColor: colors.border,
   },
   cardLeft: {},
   dateBox: {
     width: 44, alignItems: 'center',
-    backgroundColor: '#0f0f0f', borderRadius: 8, padding: 6,
+    backgroundColor: colors.bg, borderRadius: 8, padding: 6,
   },
-  dateDay: { fontSize: 18, fontWeight: '700', color: '#4ade80', lineHeight: 20 },
-  dateMonth: { fontSize: 11, color: '#555', textTransform: 'uppercase' },
+  dateDay: { fontSize: 18, fontWeight: '700', color: colors.accent, lineHeight: 20 },
+  dateMonth: { fontSize: 11, color: colors.textSubtle, textTransform: 'uppercase' },
   cardInfo: { flex: 1 },
-  cardRelDate: { fontSize: 12, color: '#555', marginBottom: 2 },
-  cardExercises: { fontSize: 14, color: '#ccc', marginBottom: 4, lineHeight: 20 },
+  cardRelDate: { fontSize: 12, color: colors.textSubtle, marginBottom: 2 },
+  cardExercises: { fontSize: 14, color: colors.textSecondary, marginBottom: 4, lineHeight: 20 },
   cardMeta: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 4 },
-  metaText: { fontSize: 12, color: '#555' },
-  metaDot: { fontSize: 12, color: '#333' },
+  metaText: { fontSize: 12, color: colors.textSubtle },
+  metaDot: { fontSize: 12, color: colors.textDisabled },
   empty: { alignItems: 'center', paddingTop: 80, paddingHorizontal: 32 },
-  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: '#1a1a1a', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
-  emptyTitle: { fontSize: 17, fontWeight: '600', color: '#fff', marginBottom: 8 },
-  emptyText: { fontSize: 14, color: '#666', textAlign: 'center', lineHeight: 22 },
+  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
+  emptyTitle: { fontSize: 17, fontWeight: '600', color: colors.text, marginBottom: 8 },
+  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
 });

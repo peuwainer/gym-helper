@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Plus, Play, Pencil, Trash2, ChevronRight, Dumbbell } from 'lucide-react-native';
+import { colors } from '../../lib/theme';
 import { WorkoutTemplate } from '../../types';
 import { getTemplates, deleteTemplate } from '../../lib/db';
 
@@ -43,17 +44,17 @@ function TemplateCard({
           </View>
         </View>
         <TouchableOpacity style={styles.startBtn} onPress={onStart}>
-          <Play size={16} color="#0f0f0f" fill="#0f0f0f" />
+          <Play size={16} color={colors.bg} fill={colors.bg} />
         </TouchableOpacity>
       </View>
       <View style={styles.cardActions}>
         <TouchableOpacity style={styles.actionBtn} onPress={onEdit}>
-          <Pencil size={14} color="#888" />
+          <Pencil size={14} color={colors.textMuted} />
           <Text style={styles.actionText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionBtn} onPress={onDelete}>
-          <Trash2 size={14} color="#666" />
-          <Text style={[styles.actionText, { color: '#666' }]}>Excluir</Text>
+          <Trash2 size={14} color={colors.textMuted} />
+          <Text style={styles.actionText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -125,9 +126,9 @@ export default function TemplatesScreen() {
             style={styles.newBtn}
             onPress={() => router.push('/template/edit')}
           >
-            <Plus size={18} color="#4ade80" />
+            <Plus size={18} color={colors.accent} />
             <Text style={styles.newBtnText}>Criar treino manualmente</Text>
-            <ChevronRight size={16} color="#444" />
+            <ChevronRight size={16} color={colors.textDisabled} />
           </TouchableOpacity>
         }
       />
@@ -136,42 +137,42 @@ export default function TemplatesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
+  container: { flex: 1, backgroundColor: colors.bg },
   list: { padding: 16, gap: 12, paddingBottom: 32 },
   newBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    backgroundColor: '#1a1a1a', padding: 14, borderRadius: 12,
-    borderWidth: 1, borderColor: '#2a2a2a', marginBottom: 4,
+    backgroundColor: colors.surface, padding: 14, borderRadius: 12,
+    borderWidth: 1, borderColor: colors.border, marginBottom: 4,
   },
-  newBtnText: { flex: 1, color: '#4ade80', fontSize: 15, fontWeight: '500' },
+  newBtnText: { flex: 1, color: colors.accent, fontSize: 15, fontWeight: '500' },
   card: {
-    backgroundColor: '#1a1a1a', borderRadius: 14,
-    borderWidth: 1, borderColor: '#2a2a2a', overflow: 'hidden',
+    backgroundColor: colors.surface, borderRadius: 14,
+    borderWidth: 1, borderColor: colors.border, overflow: 'hidden',
   },
   cardMain: {
     flexDirection: 'row', alignItems: 'center',
     padding: 14, gap: 12,
   },
   cardInfo: { flex: 1 },
-  cardName: { fontSize: 16, fontWeight: '700', color: '#fff', marginBottom: 4 },
-  cardDesc: { fontSize: 13, color: '#888', marginBottom: 6, lineHeight: 18 },
+  cardName: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 4 },
+  cardDesc: { fontSize: 13, color: colors.textMuted, marginBottom: 6, lineHeight: 18 },
   cardMeta: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 4 },
-  metaText: { fontSize: 12, color: '#555' },
-  metaDot: { fontSize: 12, color: '#333' },
+  metaText: { fontSize: 12, color: colors.textSubtle },
+  metaDot: { fontSize: 12, color: colors.textDisabled },
   startBtn: {
-    width: 44, height: 44, borderRadius: 10, backgroundColor: '#4ade80',
+    width: 44, height: 44, borderRadius: 10, backgroundColor: colors.accent,
     alignItems: 'center', justifyContent: 'center',
   },
   cardActions: {
-    flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#2a2a2a',
+    flexDirection: 'row', borderTopWidth: 1, borderTopColor: colors.border,
   },
   actionBtn: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 6, paddingVertical: 10,
   },
-  actionText: { fontSize: 13, color: '#888' },
+  actionText: { fontSize: 13, color: colors.textMuted },
   empty: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 32 },
-  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: '#1a1a1a', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
-  emptyTitle: { fontSize: 17, fontWeight: '600', color: '#fff', marginBottom: 8 },
-  emptyText: { fontSize: 14, color: '#666', textAlign: 'center', lineHeight: 22 },
+  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
+  emptyTitle: { fontSize: 17, fontWeight: '600', color: colors.text, marginBottom: 8 },
+  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
 });

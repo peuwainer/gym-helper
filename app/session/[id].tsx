@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { WorkoutSession } from '../../types';
 import { getSession } from '../../lib/db';
+import { colors } from '../../lib/theme';
 
 export default function SessionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -54,23 +55,23 @@ export default function SessionDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
+  container: { flex: 1, backgroundColor: colors.bg },
   content: { padding: 20, gap: 14, paddingBottom: 40 },
-  date: { fontSize: 18, fontWeight: '700', color: '#fff', textTransform: 'capitalize' },
-  duration: { fontSize: 14, color: '#555', marginTop: -8 },
+  date: { fontSize: 18, fontWeight: '700', color: colors.text, textTransform: 'capitalize' },
+  duration: { fontSize: 14, color: colors.textSubtle, marginTop: -8 },
   exerciseCard: {
-    backgroundColor: '#1a1a1a', borderRadius: 12,
-    borderWidth: 1, borderColor: '#2a2a2a', padding: 14, gap: 6,
+    backgroundColor: colors.surface, borderRadius: 12,
+    borderWidth: 1, borderColor: colors.border, padding: 14, gap: 6,
   },
-  exerciseName: { fontSize: 15, fontWeight: '600', color: '#fff' },
-  exerciseMeta: { fontSize: 12, color: '#555', marginBottom: 4 },
+  exerciseName: { fontSize: 15, fontWeight: '600', color: colors.text },
+  exerciseMeta: { fontSize: 12, color: colors.textSubtle, marginBottom: 4 },
   setRow: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
     paddingVertical: 4,
   },
   setRowSkipped: { opacity: 0.4 },
-  setText: { fontSize: 14, color: '#ccc', flex: 1 },
+  setText: { fontSize: 14, color: colors.textSecondary, flex: 1 },
   setStatus: { fontSize: 14, fontWeight: '700' },
-  done: { color: '#4ade80' },
-  skipped: { color: '#444' },
+  done: { color: colors.accent },
+  skipped: { color: colors.textDisabled },
 });

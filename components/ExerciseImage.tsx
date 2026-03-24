@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { Dumbbell } from 'lucide-react-native';
 import { useExerciseImage } from '../lib/useExerciseImage';
+import { colors } from '../lib/theme';
 
 interface Props {
   exerciseName: string;
@@ -26,7 +27,7 @@ export function ExerciseImage({ exerciseName, exerciseNameEn, size = 48 }: Props
   if (!imageUrl) {
     return (
       <View style={[styles.fallback, containerStyle]}>
-        <Dumbbell size={size * 0.45} color="#555" />
+        <Dumbbell size={size * 0.45} color={colors.textSubtle} />
       </View>
     );
   }
@@ -43,14 +44,14 @@ export function ExerciseImage({ exerciseName, exerciseNameEn, size = 48 }: Props
 
 const styles = StyleSheet.create({
   skeleton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: colors.border,
   },
   fallback: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   image: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: colors.surface,
   },
 });
