@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   clearKeyText: { color: '#666', fontSize: 14 },
   hint: {
     backgroundColor: '#111', borderRadius: 8, padding: 12,
-    borderLeftWidth: 2, borderLeftColor: '#2a2a2a',
+    borderWidth: 1, borderColor: '#222',
   },
   hintText: { fontSize: 12, color: '#555', lineHeight: 18 },
   dangerBtn: {
