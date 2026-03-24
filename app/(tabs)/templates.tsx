@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 12, color: '#555' },
   metaDot: { fontSize: 12, color: '#333' },
   startBtn: {
-    width: 40, height: 40, borderRadius: 10, backgroundColor: '#4ade80',
+    width: 44, height: 44, borderRadius: 10, backgroundColor: '#4ade80',
     alignItems: 'center', justifyContent: 'center',
   },
   cardActions: {
