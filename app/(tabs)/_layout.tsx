@@ -12,6 +12,7 @@ export default function TabsLayout() {
         headerStyle: { backgroundColor: colors.bg },
         headerTintColor: colors.text,
         headerShadowVisible: false,
+        headerTitleStyle: { fontFamily: fonts.display, fontSize: 20 },
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
