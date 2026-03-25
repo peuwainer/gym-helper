@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setThemeMode(next);
   };
 
-  const colors: AppColors = mode === 'dark' ? darkColors : (lightColors as unknown as AppColors);
+  const colors: AppColors = mode === 'dark' ? darkColors : lightColors;
 
   return (
     <ThemeContext.Provider value={{ colors, mode, toggleTheme }}>

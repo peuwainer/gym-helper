@@ -87,7 +87,7 @@ export const lightColors = {
   assistantBubbleText: '#7a5c45',
 } as const;
 
-export type AppColors = typeof darkColors;
+export type AppColors = { readonly [K in keyof typeof darkColors]: string };
 
 /** @deprecated Use `darkColors` directly or consume via ThemeContext. */
 export const colors = darkColors;
