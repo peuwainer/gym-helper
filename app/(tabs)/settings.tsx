@@ -11,7 +11,7 @@ import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
 
 export default function SettingsScreen() {
-  const { colors } = useTheme();
+  const { colors, mode, toggleTheme } = useTheme();
   const [apiKey, setApiKeyState] = useState('');
   const [saved, setSaved] = useState(false);
   const [showKey, setShowKey] = useState(false);
@@ -57,6 +57,14 @@ export default function SettingsScreen() {
     },
     dangerText: { color: colors.error, fontSize: 14, fontFamily: fonts.body },
     aboutText: { fontSize: 13, color: colors.textSubtle, lineHeight: 22, fontFamily: fonts.body },
+    themeRow: { flexDirection: 'row', gap: 8 },
+    themeBtn: {
+      flex: 1, paddingVertical: 10, borderRadius: 8, alignItems: 'center',
+      borderWidth: 1, borderColor: colors.border,
+    },
+    themeBtnActive: { backgroundColor: colors.accent, borderColor: colors.accent },
+    themeBtnText: { fontSize: 14, fontFamily: fonts.bodyMedium, color: colors.textSecondary },
+    themeBtnTextActive: { color: colors.surface },
   });
 
   useFocusEffect(
@@ -150,6 +158,29 @@ export default function SettingsScreen() {
           <Text style={styles.hintText}>
             A key é armazenada apenas neste dispositivo. Nunca é enviada para servidores externos — apenas para a API da Anthropic.
           </Text>
+        </View>
+      </View>
+
+      {/* Appearance */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Aparência</Text>
+        <View style={styles.themeRow}>
+          <TouchableOpacity
+            style={[styles.themeBtn, mode === 'light' && styles.themeBtnActive]}
+            onPress={() => mode !== 'light' && toggleTheme()}
+          >
+            <Text style={[styles.themeBtnText, mode === 'light' && styles.themeBtnTextActive]}>
+              Claro
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.themeBtn, mode === 'dark' && styles.themeBtnActive]}
+            onPress={() => mode !== 'dark' && toggleTheme()}
+          >
+            <Text style={[styles.themeBtnText, mode === 'dark' && styles.themeBtnTextActive]}>
+              Escuro
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
