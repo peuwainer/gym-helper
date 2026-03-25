@@ -230,6 +230,14 @@ export async function getCachedExerciseImage(name: string): Promise<{ imageUrl: 
   return { imageUrl: row.image_url, wgerExerciseId: row.wger_exercise_id };
 }
 
+/** Deletes stale cache entries: empty sentinels and malformed double-URL entries. */
+export async function clearBadImageCache(): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    `DELETE FROM exercise_image_cache WHERE image_url = '' OR image_url LIKE 'https://wger.dehttps://%'`
+  );
+}
+
 export async function cacheExerciseImage(name: string, imageUrl: string, wgerExerciseId?: number): Promise<void> {
   const db = await getDb();
   await db.runAsync(

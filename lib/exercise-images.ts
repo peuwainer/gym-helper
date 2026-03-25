@@ -1,8 +1,13 @@
-import { getCachedExerciseImage, cacheExerciseImage } from './db';
+import { getCachedExerciseImage, cacheExerciseImage, clearBadImageCache } from './db';
 import { searchExercises, getExerciseImage } from './wger';
+import { getWikipediaImage } from './wikipedia';
 
 // In-flight deduplication: avoid parallel fetches for the same exercise
 const inflight = new Map<string, Promise<string | null>>();
+
+// Track which empty-cached exercises we've already attempted Wikipedia for
+// this session, so we don't hammer Wikipedia on every render.
+const triedWikipedia = new Set<string>();
 
 export async function resolveExerciseImage(
   exerciseName: string,
@@ -26,17 +31,32 @@ export async function resolveExerciseImage(
 async function doResolve(exerciseName: string, englishName?: string): Promise<string | null> {
   console.log('[img] resolving:', exerciseName, englishName);
 
+  const key = exerciseName.toLowerCase();
+
   // 1. Check SQLite cache
   const cached = await getCachedExerciseImage(exerciseName);
   if (cached) {
-    // Empty string = sentinel for "no image available"
-    console.log('[img] cache hit:', exerciseName, '->', cached.imageUrl || '(no image)');
-    return cached.imageUrl || null;
+    if (cached.imageUrl) {
+      console.log('[img] cache hit:', exerciseName, '->', cached.imageUrl);
+      return cached.imageUrl;
+    }
+
+    // Empty sentinel = wger found nothing. Try Wikipedia once per session.
+    if (!triedWikipedia.has(key)) {
+      triedWikipedia.add(key);
+      const wikiUrl = await tryWikipedia(exerciseName, englishName);
+      if (wikiUrl) {
+        console.log('[img] wikipedia fallback (from cache):', exerciseName, '->', wikiUrl);
+        await cacheExerciseImage(exerciseName, wikiUrl);
+        return wikiUrl;
+      }
+    }
+
+    console.log('[img] cache hit (no image):', exerciseName);
+    return null;
   }
 
   // 2. Search wger API
-  // Try English name first (wger has far more images for English exercises),
-  // then fall back to the original name
   let imageUrl: string | null = null;
   let wgerId: number | undefined;
   let apiResponded = false;
@@ -48,11 +68,6 @@ async function doResolve(exerciseName: string, englishName?: string): Promise<st
   for (const term of searchTerms) {
     const results = await searchExercises(term, 'english');
     if (results.length === 0) {
-      // searchExercises only returns [] on error (catch) or genuinely empty response.
-      // We can't distinguish the two here, so we check the result count.
-      // An empty array from a successful response still means apiResponded.
-      // Since searchExercises swallows errors and returns [], we conservatively
-      // assume it responded (to avoid re-caching on every retry).
       apiResponded = true;
       continue;
     }
@@ -63,12 +78,11 @@ async function doResolve(exerciseName: string, englishName?: string): Promise<st
     const directImage: string | null = (first as any).data?.image ?? null;
 
     if (directImage) {
-      imageUrl = `https://wger.de${directImage}`;
+      imageUrl = directImage.startsWith('http') ? directImage : `https://wger.de${directImage}`;
       wgerId = baseId;
       break;
     }
 
-    // No image in search result — try the exerciseimage endpoint with the correct base_id
     if (baseId) {
       wgerId = baseId;
       imageUrl = await getExerciseImage(baseId);
@@ -77,12 +91,27 @@ async function doResolve(exerciseName: string, englishName?: string): Promise<st
     }
   }
 
+  // 3. Wikipedia fallback when wger has nothing
+  if (!imageUrl) {
+    triedWikipedia.add(key);
+    imageUrl = await tryWikipedia(exerciseName, englishName);
+    if (imageUrl) {
+      console.log('[img] wikipedia fallback:', exerciseName, '->', imageUrl);
+    }
+  }
+
   console.log('[img] caching:', exerciseName, '->', imageUrl ?? '(no image)');
 
-  // 3. Cache result only if API responded (skip caching on network errors)
-  if (apiResponded) {
+  // 4. Cache result only if API responded
+  if (apiResponded || imageUrl) {
     await cacheExerciseImage(exerciseName, imageUrl ?? '', wgerId);
   }
 
   return imageUrl;
+}
+
+async function tryWikipedia(exerciseName: string, englishName?: string): Promise<string | null> {
+  // Prefer English name for Wikipedia (much better results)
+  const query = englishName || exerciseName;
+  return getWikipediaImage(query);
 }

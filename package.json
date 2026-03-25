@@ -11,6 +11,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@expo-google-fonts/dm-sans": "^0.4.2",
+    "@expo-google-fonts/syne": "^0.4.2",
     "@expo/cli": "^55.0.18",
     "@expo/metro-runtime": "^55.0.6",
     "@expo/ngrok": "^4.1.3",
