@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const KEYS = {
   ANTHROPIC_API_KEY: 'anthropic_api_key',
   ONBOARDING_DONE: 'onboarding_done',
+  THEME_MODE: 'theme_mode',
 };
 
 export async function getApiKey(): Promise<string | null> {
@@ -24,4 +25,13 @@ export async function isOnboardingDone(): Promise<boolean> {
 
 export async function setOnboardingDone(): Promise<void> {
   await AsyncStorage.setItem(KEYS.ONBOARDING_DONE, 'true');
+}
+
+export async function getThemeMode(): Promise<'light' | 'dark'> {
+  const val = await AsyncStorage.getItem(KEYS.THEME_MODE);
+  return val === 'light' ? 'light' : 'dark'; // default: dark
+}
+
+export async function setThemeMode(mode: 'light' | 'dark'): Promise<void> {
+  await AsyncStorage.setItem(KEYS.THEME_MODE, mode);
 }
