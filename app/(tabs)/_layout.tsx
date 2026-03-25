@@ -1,8 +1,10 @@
 import { Tabs } from 'expo-router';
 import { MessageCircle, Dumbbell, History, Settings } from 'lucide-react-native';
-import { colors } from '../../lib/theme';
+import { fonts } from '../../lib/theme';
+import { useTheme } from '../../lib/ThemeContext';
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
   return (
     <Tabs
       sceneContainerStyle={{ backgroundColor: colors.bg }}
@@ -17,7 +19,7 @@ export default function TabsLayout() {
         },
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textSubtle,
-        tabBarLabelStyle: { fontSize: 11 },
+        tabBarLabelStyle: { fontSize: 11, fontFamily: fonts.bodyMedium },
       }}
     >
       <Tabs.Screen
