@@ -82,8 +82,8 @@ export const lightColors = {
   errorSurface: '#fef2f2',
 
   // Chat-specific
-  userBubbleBg: '#fff4ee',
-  userBubbleText: '#7c2d12',
+  userBubbleBg: '#ea580c',
+  userBubbleText: '#ffffff',
   assistantBubbleText: '#7a5c45',
 } as const;
 
