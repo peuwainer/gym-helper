@@ -7,6 +7,8 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Plus, Trash2, Check } from 'lucide-react-native';
 import { WorkoutTemplate, WorkoutExercise } from '../../types';
 import { getTemplate, saveTemplate, updateTemplate } from '../../lib/db';
+import { colors, fonts } from '../../lib/theme';
+import { useTheme } from '../../lib/ThemeContext';
 
 const EMPTY_EXERCISE: WorkoutExercise = {
   exercise: { id: Date.now(), name: '', category: '', muscles: [], description: '' },
@@ -16,6 +18,7 @@ const EMPTY_EXERCISE: WorkoutExercise = {
 };
 
 export default function EditTemplateScreen() {
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const router = useRouter();
   const isNew = !id;
@@ -99,7 +102,7 @@ export default function EditTemplateScreen() {
             value={name}
             onChangeText={setName}
             placeholder="Ex: Peito e Tríceps"
-            placeholderTextColor="#333"
+            placeholderTextColor={colors.textDisabled}
           />
         </View>
 
@@ -110,7 +113,7 @@ export default function EditTemplateScreen() {
             value={description}
             onChangeText={setDescription}
             placeholder="Ex: Treino focado em força, com exercícios compostos"
-            placeholderTextColor="#333"
+            placeholderTextColor={colors.textDisabled}
             multiline
           />
         </View>
@@ -122,7 +125,7 @@ export default function EditTemplateScreen() {
             <View style={styles.exerciseHeader}>
               <Text style={styles.exerciseNumber}>{i + 1}</Text>
               <TouchableOpacity onPress={() => removeExercise(i)}>
-                <Trash2 size={16} color="#555" />
+                <Trash2 size={16} color={colors.textSubtle} />
               </TouchableOpacity>
             </View>
 
@@ -132,7 +135,7 @@ export default function EditTemplateScreen() {
               value={ex.exercise.name}
               onChangeText={v => updateExercise(i, 'name', v)}
               placeholder="Ex: Supino reto"
-              placeholderTextColor="#333"
+              placeholderTextColor={colors.textDisabled}
             />
 
             <View style={styles.row}>
@@ -171,18 +174,18 @@ export default function EditTemplateScreen() {
               value={ex.notes || ''}
               onChangeText={v => updateExercise(i, 'notes', v)}
               placeholder="Ex: Foco na contração excêntrica"
-              placeholderTextColor="#333"
+              placeholderTextColor={colors.textDisabled}
             />
           </View>
         ))}
 
         <TouchableOpacity style={styles.addBtn} onPress={addExercise}>
-          <Plus size={18} color="#4ade80" />
+          <Plus size={18} color={colors.accent} />
           <Text style={styles.addBtnText}>Adicionar exercício</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Check size={18} color="#0f0f0f" />
+          <Check size={18} color={colors.bg} />
           <Text style={styles.saveBtnText}>Salvar treino</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -191,32 +194,33 @@ export default function EditTemplateScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f0f0f' },
+  container: { flex: 1, backgroundColor: colors.bg },
   content: { padding: 20, gap: 12, paddingBottom: 60 },
   field: { gap: 6 },
-  label: { fontSize: 12, color: '#555', fontWeight: '500', textTransform: 'uppercase', letterSpacing: 0.5 },
+  label: { fontSize: 12, fontFamily: fonts.bodyMedium, color: colors.textSubtle, textTransform: 'uppercase', letterSpacing: 0.8 },
   input: {
-    backgroundColor: '#1a1a1a', borderRadius: 10, padding: 12,
-    color: '#fff', fontSize: 15, borderWidth: 1, borderColor: '#2a2a2a',
+    backgroundColor: colors.surface, borderRadius: 10, padding: 12,
+    color: colors.text, fontSize: 15, borderWidth: 1, borderColor: colors.border,
+    fontFamily: fonts.body,
   },
   inputMulti: { minHeight: 70, textAlignVertical: 'top' },
-  sectionTitle: { fontSize: 14, fontWeight: '600', color: '#4ade80', marginTop: 8 },
+  sectionTitle: { fontSize: 14, fontFamily: fonts.displayMedium, color: colors.accent, marginTop: 8, letterSpacing: 0.5 },
   exerciseCard: {
-    backgroundColor: '#1a1a1a', borderRadius: 14,
-    borderWidth: 1, borderColor: '#2a2a2a', padding: 14, gap: 8,
+    backgroundColor: colors.surface, borderRadius: 14,
+    borderWidth: 1, borderColor: colors.border, padding: 14, gap: 8,
   },
   exerciseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  exerciseNumber: { fontSize: 13, fontWeight: '700', color: '#4ade80' },
+  exerciseNumber: { fontSize: 13, fontFamily: fonts.display, color: colors.accent },
   row: { flexDirection: 'row', gap: 8 },
   addBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-    borderWidth: 1, borderColor: '#2a2a2a', borderStyle: 'dashed',
+    borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed',
     padding: 14, borderRadius: 12,
   },
-  addBtnText: { color: '#4ade80', fontSize: 15 },
+  addBtnText: { color: colors.accent, fontSize: 15, fontFamily: fonts.bodyMedium },
   saveBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
-    backgroundColor: '#4ade80', padding: 16, borderRadius: 14, marginTop: 8,
+    backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
   },
-  saveBtnText: { fontSize: 16, fontWeight: '700', color: '#0f0f0f' },
+  saveBtnText: { fontSize: 16, fontFamily: fonts.bodyBold, color: colors.bg },
 });

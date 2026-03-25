@@ -5,7 +5,8 @@ import {
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Plus, Play, Pencil, Trash2, ChevronRight, Dumbbell } from 'lucide-react-native';
-import { colors } from '../../lib/theme';
+import { colors, fonts } from '../../lib/theme';
+import { useTheme } from '../../lib/ThemeContext';
 import { WorkoutTemplate } from '../../types';
 import { getTemplates, deleteTemplate } from '../../lib/db';
 
@@ -62,6 +63,7 @@ function TemplateCard({
 }
 
 export default function TemplatesScreen() {
+  const { colors } = useTheme();
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([]);
   const router = useRouter();
 
@@ -113,7 +115,7 @@ export default function TemplatesScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <View style={styles.emptyIconWrap}>
-              <Dumbbell size={28} color="#555" />
+              <Dumbbell size={28} color={colors.textSubtle} />
             </View>
             <Text style={styles.emptyTitle}>Nenhum treino salvo</Text>
             <Text style={styles.emptyText}>
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface, padding: 14, borderRadius: 12,
     borderWidth: 1, borderColor: colors.border, marginBottom: 4,
   },
-  newBtnText: { flex: 1, color: colors.accent, fontSize: 15, fontWeight: '500' },
+  newBtnText: { flex: 1, color: colors.accent, fontSize: 15, fontFamily: fonts.bodyMedium },
   card: {
     backgroundColor: colors.surface, borderRadius: 14,
     borderWidth: 1, borderColor: colors.border, overflow: 'hidden',
@@ -154,11 +156,11 @@ const styles = StyleSheet.create({
     padding: 14, gap: 12,
   },
   cardInfo: { flex: 1 },
-  cardName: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 4 },
-  cardDesc: { fontSize: 13, color: colors.textMuted, marginBottom: 6, lineHeight: 18 },
+  cardName: { fontSize: 16, fontFamily: fonts.display, color: colors.text, marginBottom: 4 },
+  cardDesc: { fontSize: 13, color: colors.textMuted, marginBottom: 6, lineHeight: 18, fontFamily: fonts.body },
   cardMeta: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 4 },
-  metaText: { fontSize: 12, color: colors.textSubtle },
-  metaDot: { fontSize: 12, color: colors.textDisabled },
+  metaText: { fontSize: 12, color: colors.textSubtle, fontFamily: fonts.body },
+  metaDot: { fontSize: 12, color: colors.textDisabled, fontFamily: fonts.body },
   startBtn: {
     width: 44, height: 44, borderRadius: 10, backgroundColor: colors.accent,
     alignItems: 'center', justifyContent: 'center',
@@ -170,9 +172,9 @@ const styles = StyleSheet.create({
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 6, paddingVertical: 10,
   },
-  actionText: { fontSize: 13, color: colors.textMuted },
+  actionText: { fontSize: 13, color: colors.textMuted, fontFamily: fonts.body },
   empty: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 32 },
   emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
-  emptyTitle: { fontSize: 17, fontWeight: '600', color: colors.text, marginBottom: 8 },
-  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
+  emptyTitle: { fontSize: 17, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 8 },
+  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22, fontFamily: fonts.body },
 });

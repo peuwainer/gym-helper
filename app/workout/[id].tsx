@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
-  StyleSheet, Alert, Modal, FlatList,
+  StyleSheet, Alert, Modal, FlatList, Linking,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Check, X, ChevronDown, ChevronUp, Info } from 'lucide-react-native';
 import { WorkoutTemplate, ExerciseLog, SetLog } from '../../types';
 import { getTemplate, saveSession, getLastWeights } from '../../lib/db';
 import { ExerciseImage } from '../../components/ExerciseImage';
-import { colors } from '../../lib/theme';
+import { colors, fonts } from '../../lib/theme';
+import { useTheme } from '../../lib/ThemeContext';
 
 function SetRow({
   set,
@@ -86,7 +87,14 @@ function ExercisePanel({
       <TouchableOpacity style={styles.exerciseHeader} onPress={() => setExpanded(v => !v)}>
         <ExerciseImage exerciseName={log.exerciseName} exerciseNameEn={log.exerciseNameEn} size={48} />
         <View style={styles.exerciseHeaderLeft}>
-          <Text style={styles.exerciseName}>{log.exerciseName}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              const query = encodeURIComponent(log.exerciseNameEn || log.exerciseName);
+              Linking.openURL(`https://www.google.com/search?q=${query}&tbm=isch`);
+            }}
+          >
+            <Text style={styles.exerciseName}>{log.exerciseName}</Text>
+          </TouchableOpacity>
           <Text style={styles.exerciseMeta}>
             {log.targetSets}x{log.targetReps}
             {lastWeight ? `  ·  última vez: ${lastWeight}kg` : ''}
@@ -123,6 +131,7 @@ function ExercisePanel({
 }
 
 export default function WorkoutScreen() {
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [template, setTemplate] = useState<WorkoutTemplate | null>(null);
@@ -238,7 +247,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.bg },
   progressBar: { height: 3, backgroundColor: colors.surface },
   progressFill: { height: 3, backgroundColor: colors.accent, borderRadius: 2 },
-  progressText: { fontSize: 12, color: colors.textSubtle, textAlign: 'center', paddingVertical: 6 },
+  progressText: { fontSize: 12, color: colors.textSubtle, textAlign: 'center', paddingVertical: 6, fontFamily: fonts.body },
   list: { padding: 16, gap: 12, paddingBottom: 40 },
   exercisePanel: {
     backgroundColor: colors.surface, borderRadius: 14,
@@ -250,15 +259,15 @@ const styles = StyleSheet.create({
     padding: 14, gap: 12,
   },
   exerciseHeaderLeft: { flex: 1 },
-  exerciseName: { fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 2 },
-  exerciseMeta: { fontSize: 12, color: colors.textSubtle },
+  exerciseName: { fontSize: 16, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 2 },
+  exerciseMeta: { fontSize: 12, color: colors.textSubtle, fontFamily: fonts.body },
   exerciseHeaderRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   donePill: {
     backgroundColor: colors.accent, borderRadius: 10,
     paddingHorizontal: 6, paddingVertical: 2,
   },
-  donePillText: { fontSize: 11, color: colors.bg, fontWeight: '700' },
-  setsProgress: { fontSize: 13, color: colors.textSubtle },
+  donePillText: { fontSize: 11, color: colors.bg, fontFamily: fonts.bodyBold },
+  setsProgress: { fontSize: 13, color: colors.textSubtle, fontFamily: fonts.body },
   setsContainer: { padding: 14, paddingTop: 0 },
   setHeader: {
     flexDirection: 'row', paddingBottom: 6,
@@ -269,12 +278,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6, borderRadius: 8, paddingHorizontal: 4,
   },
   setRowDone: { backgroundColor: colors.accentSurface },
-  setNumber: { width: 20, fontSize: 13, color: colors.textDisabled, textAlign: 'center' },
+  setNumber: { width: 20, fontSize: 13, color: colors.textDisabled, textAlign: 'center', fontFamily: fonts.body },
   setField: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 },
-  setLabel: { fontSize: 11, color: colors.textDisabled },
+  setLabel: { fontSize: 11, color: colors.textDisabled, fontFamily: fonts.body },
   setInput: {
     flex: 1, backgroundColor: colors.surface2, borderRadius: 6, padding: 6,
-    color: colors.text, fontSize: 15, fontWeight: '600', textAlign: 'center',
+    color: colors.text, fontSize: 15, fontFamily: fonts.bodyMedium, textAlign: 'center',
     borderWidth: 1, borderColor: colors.border,
   },
   checkBtn: {
@@ -286,5 +295,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
     backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
   },
-  finishText: { fontSize: 16, fontWeight: '700', color: colors.bg },
+  finishText: { fontSize: 16, fontFamily: fonts.bodyBold, color: colors.bg },
 });

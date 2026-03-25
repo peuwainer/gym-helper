@@ -7,7 +7,8 @@ import {
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Send, Trash2, Play } from 'lucide-react-native';
 import { ChatMessage, WorkoutTemplate } from '../../types';
-import { colors } from '../../lib/theme';
+import { colors, fonts } from '../../lib/theme';
+import { useTheme } from '../../lib/ThemeContext';
 import { sendMessage } from '../../lib/claude';
 import { getApiKey } from '../../lib/storage';
 import { saveChatMessage, getChatHistory, clearChatHistory, saveTemplate } from '../../lib/db';
@@ -36,7 +37,7 @@ function WorkoutCard({ workout, onStart, onSave }: {
       </View>
       <View style={styles.workoutActions}>
         <TouchableOpacity style={styles.btnStart} onPress={onStart}>
-          <Play size={14} color="#0f0f0f" />
+          <Play size={14} color={colors.bg} />
           <Text style={styles.btnStartText}>Começar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btnSave} onPress={onSave}>
@@ -72,6 +73,7 @@ function MessageBubble({ msg, onStartWorkout, onSaveWorkout }: {
 }
 
 export default function ChatScreen() {
+  const { colors } = useTheme();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -183,7 +185,7 @@ export default function ChatScreen() {
         <Text style={styles.headerTitle}>Treinador IA</Text>
         {messages.length > 0 && (
           <TouchableOpacity onPress={handleClear}>
-            <Trash2 size={18} color="#555" />
+            <Trash2 size={18} color={colors.textSubtle} />
           </TouchableOpacity>
         )}
       </View>
@@ -229,20 +231,20 @@ export default function ChatScreen() {
           value={input}
           onChangeText={setInput}
           placeholder="Fale com seu treinador..."
-          placeholderTextColor="#444"
+          placeholderTextColor={colors.textDisabled}
           multiline
           maxLength={1000}
           returnKeyType="send"
           onSubmitEditing={handleSend}
         />
         <TouchableOpacity
-          style={[styles.sendBtn, (!input.trim() || loading) && styles.sendBtnDisabled]}
+          style={[styles.sendBtn, !input.trim() && !loading && styles.sendBtnDisabled]}
           onPress={handleSend}
           disabled={!input.trim() || loading}
         >
           {loading
-            ? <ActivityIndicator size="small" color="#0f0f0f" />
-            : <Send size={18} color="#0f0f0f" />
+            ? <ActivityIndicator size="small" color="#fff" />
+            : <Send size={18} color="#fff" />
           }
         </TouchableOpacity>
       </View>
@@ -257,40 +259,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, paddingTop: 56, paddingBottom: 12,
     backgroundColor: colors.bg,
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: colors.text },
+  headerTitle: { fontSize: 20, fontFamily: fonts.display, color: colors.text },
   banner: {
     backgroundColor: colors.surface, borderLeftWidth: 3, borderLeftColor: colors.accent,
     marginHorizontal: 16, marginBottom: 8, padding: 12, borderRadius: 8,
   },
-  bannerText: { color: colors.textSecondary, fontSize: 13 },
+  bannerText: { color: colors.textSecondary, fontSize: 13, fontFamily: fonts.body },
   messageList: { padding: 16, gap: 12, paddingBottom: 8 },
   bubble: { maxWidth: '92%', borderRadius: 16, padding: 12 },
   bubbleUser: { alignSelf: 'flex-end', backgroundColor: colors.userBubbleBg },
   bubbleAssistant: { alignSelf: 'flex-start', backgroundColor: colors.surface },
-  bubbleText: { fontSize: 15, lineHeight: 22 },
+  bubbleText: { fontSize: 15, lineHeight: 22, fontFamily: fonts.body },
   bubbleTextUser: { color: colors.userBubbleText },
   bubbleTextAssistant: { color: colors.assistantBubbleText },
   workoutCard: {
     backgroundColor: colors.surface2, borderRadius: 12, padding: 14,
     marginBottom: 8, borderWidth: 1, borderColor: colors.border,
   },
-  workoutTitle: { fontSize: 17, fontWeight: '700', color: colors.accent, marginBottom: 4 },
-  workoutDesc: { fontSize: 13, color: colors.textMuted, marginBottom: 10 },
+  workoutTitle: { fontSize: 17, fontFamily: fonts.display, color: colors.accent, marginBottom: 4 },
+  workoutDesc: { fontSize: 13, color: colors.textMuted, marginBottom: 10, fontFamily: fonts.body },
   exerciseList: { gap: 8, marginBottom: 12 },
   exerciseRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  exerciseItem: { fontSize: 14, color: colors.textSecondary, flex: 1 },
+  exerciseItem: { fontSize: 14, color: colors.textSecondary, flex: 1, fontFamily: fonts.body },
   workoutActions: { flexDirection: 'row', gap: 8 },
   btnStart: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
     backgroundColor: colors.accent, paddingHorizontal: 16, paddingVertical: 8,
     borderRadius: 8, flex: 1, justifyContent: 'center',
   },
-  btnStartText: { color: colors.bg, fontWeight: '700', fontSize: 14 },
+  btnStartText: { color: colors.bg, fontFamily: fonts.bodyBold, fontSize: 14 },
   btnSave: {
     borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12, paddingVertical: 8,
     borderRadius: 8, flex: 1, alignItems: 'center',
   },
-  btnSaveText: { color: colors.textMuted, fontSize: 13 },
+  btnSaveText: { color: colors.textMuted, fontSize: 13, fontFamily: fonts.body },
   inputRow: {
     flexDirection: 'row', padding: 12, gap: 8,
     backgroundColor: colors.bg, borderTopWidth: 1, borderTopColor: colors.surface,
@@ -307,10 +309,10 @@ const styles = StyleSheet.create({
   sendBtnDisabled: { backgroundColor: colors.accentDisabled, opacity: 0.5 },
   empty: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 32 },
   emptyIcon: { fontSize: 48, marginBottom: 16 },
-  emptyTitle: { fontSize: 18, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: 'center' },
-  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22, marginBottom: 16 },
+  emptyTitle: { fontSize: 18, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 12, textAlign: 'center' },
+  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22, marginBottom: 16, fontFamily: fonts.body },
   emptyExample: {
     fontSize: 13, color: colors.textSubtle, textAlign: 'center', lineHeight: 20,
-    fontStyle: 'italic', backgroundColor: colors.surface, padding: 12, borderRadius: 8,
+    fontFamily: fonts.body, backgroundColor: colors.surface, padding: 12, borderRadius: 8,
   },
 });
