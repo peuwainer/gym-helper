@@ -8,21 +8,76 @@ import { WorkoutSession } from '../../types';
 import { getSession, getSessions } from '../../lib/db';
 import { getApiKey } from '../../lib/storage';
 import { getDebrief, DebriefInsight } from '../../lib/claude';
-import { colors, fonts } from '../../lib/theme';
+import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
 
 const MIN_SESSIONS_FOR_DEBRIEF = 3;
-
-const INSIGHT_CONFIG = {
-  up:      { icon: TrendingUp,    color: colors.accent,   bg: colors.accentSurface },
-  plateau: { icon: Minus,         color: colors.warning,  bg: colors.warningSurface },
-  warning: { icon: AlertTriangle, color: colors.errorText, bg: colors.errorSurface },
-} as const;
 
 export default function DebriefScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+
+  const INSIGHT_CONFIG = {
+    up:      { icon: TrendingUp,    color: colors.accent,   bg: colors.accentSurface },
+    plateau: { icon: Minus,         color: colors.warning,  bg: colors.warningSurface },
+    warning: { icon: AlertTriangle, color: colors.errorText, bg: colors.errorSurface },
+  } as const;
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bg },
+    content: { padding: 20, gap: 16, paddingBottom: 48 },
+
+    headline: { fontSize: 24, fontFamily: fonts.display, color: colors.text, marginBottom: 2 },
+    subheadline: { fontSize: 14, color: colors.textSubtle, textTransform: 'capitalize', fontFamily: fonts.body },
+
+    statsCard: {
+      backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border,
+      flexDirection: 'row', alignItems: 'center', paddingVertical: 20,
+    },
+    statItem: { flex: 1, alignItems: 'center' },
+    statValue: { fontSize: 22, fontFamily: fonts.display, color: colors.text },
+    statLabel: { fontSize: 12, color: colors.textSubtle, marginTop: 2, fontFamily: fonts.body },
+    statDivider: { width: 1, height: 40, backgroundColor: colors.border },
+
+    insightsCard: {
+      backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border,
+      padding: 16, gap: 10,
+    },
+    insightsTitle: { fontSize: 13, fontFamily: fonts.displayMedium, color: colors.accent, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 2 },
+
+    skeletonContainer: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8 },
+    skeletonText: { fontSize: 14, color: colors.textSubtle, fontFamily: fonts.body },
+
+    errorContainer: { alignItems: 'flex-start', gap: 10 },
+    errorText: { fontSize: 14, color: colors.errorText, fontFamily: fonts.body },
+    retryBtn: {
+      flexDirection: 'row', alignItems: 'center', gap: 6,
+      backgroundColor: colors.surfaceElevated, borderWidth: 1, borderColor: colors.border,
+      paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8,
+    },
+    retryText: { fontSize: 13, color: colors.text, fontFamily: fonts.body },
+
+    insightRow: {
+      flexDirection: 'row', alignItems: 'flex-start', gap: 10,
+      borderRadius: 10, padding: 12,
+    },
+    insightIcon: { marginTop: 2 },
+    insightText: { flex: 1, fontSize: 14, color: colors.textSecondary, lineHeight: 20, fontFamily: fonts.body },
+
+    placeholderCard: {
+      backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border,
+      padding: 16, gap: 6,
+    },
+    placeholderTitle: { fontSize: 13, fontFamily: fonts.displayMedium, color: colors.accent, textTransform: 'uppercase', letterSpacing: 1.2 },
+    placeholderText: { fontSize: 14, color: colors.textDisabled, lineHeight: 20, fontFamily: fonts.body },
+
+    historyBtn: {
+      borderWidth: 1, borderColor: colors.border, borderRadius: 12,
+      padding: 14, alignItems: 'center',
+    },
+    historyBtnText: { fontSize: 15, color: colors.textMuted, fontFamily: fonts.bodyMedium },
+  });
 
   const [session, setSession] = useState<WorkoutSession | null>(null);
   const [totalSessions, setTotalSessions] = useState(0);
@@ -95,11 +150,20 @@ export default function DebriefScreen() {
 
         {/* Stats card */}
         <View style={styles.statsCard}>
-          <StatItem label="Duração" value={`${session.durationMinutes ?? '—'} min`} />
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{session.durationMinutes ?? '—'} min</Text>
+            <Text style={styles.statLabel}>Duração</Text>
+          </View>
           <View style={styles.statDivider} />
-          <StatItem label="Exercícios" value={`${completedExercises.length}`} />
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{completedExercises.length}</Text>
+            <Text style={styles.statLabel}>Exercícios</Text>
+          </View>
           <View style={styles.statDivider} />
-          <StatItem label="Volume" value={`${Math.round(totalVolume)} kg`} />
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>{Math.round(totalVolume)} kg</Text>
+            <Text style={styles.statLabel}>Volume</Text>
+          </View>
         </View>
 
         {/* AI Insights */}
@@ -155,67 +219,3 @@ export default function DebriefScreen() {
     </>
   );
 }
-
-function StatItem({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={styles.statItem}>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: 20, gap: 16, paddingBottom: 48 },
-
-  headline: { fontSize: 24, fontFamily: fonts.display, color: colors.text, marginBottom: 2 },
-  subheadline: { fontSize: 14, color: colors.textSubtle, textTransform: 'capitalize', fontFamily: fonts.body },
-
-  statsCard: {
-    backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border,
-    flexDirection: 'row', alignItems: 'center', paddingVertical: 20,
-  },
-  statItem: { flex: 1, alignItems: 'center' },
-  statValue: { fontSize: 22, fontFamily: fonts.display, color: colors.text },
-  statLabel: { fontSize: 12, color: colors.textSubtle, marginTop: 2, fontFamily: fonts.body },
-  statDivider: { width: 1, height: 40, backgroundColor: colors.border },
-
-  insightsCard: {
-    backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border,
-    padding: 16, gap: 10,
-  },
-  insightsTitle: { fontSize: 13, fontFamily: fonts.displayMedium, color: colors.accent, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 2 },
-
-  skeletonContainer: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8 },
-  skeletonText: { fontSize: 14, color: colors.textSubtle, fontFamily: fonts.body },
-
-  errorContainer: { alignItems: 'flex-start', gap: 10 },
-  errorText: { fontSize: 14, color: colors.errorText, fontFamily: fonts.body },
-  retryBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: colors.surfaceElevated, borderWidth: 1, borderColor: colors.border,
-    paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8,
-  },
-  retryText: { fontSize: 13, color: colors.text, fontFamily: fonts.body },
-
-  insightRow: {
-    flexDirection: 'row', alignItems: 'flex-start', gap: 10,
-    borderRadius: 10, padding: 12,
-  },
-  insightIcon: { marginTop: 2 },
-  insightText: { flex: 1, fontSize: 14, color: colors.textSecondary, lineHeight: 20, fontFamily: fonts.body },
-
-  placeholderCard: {
-    backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border,
-    padding: 16, gap: 6,
-  },
-  placeholderTitle: { fontSize: 13, fontFamily: fonts.displayMedium, color: colors.accent, textTransform: 'uppercase', letterSpacing: 1.2 },
-  placeholderText: { fontSize: 14, color: colors.textDisabled, lineHeight: 20, fontFamily: fonts.body },
-
-  historyBtn: {
-    borderWidth: 1, borderColor: colors.border, borderRadius: 12,
-    padding: 14, alignItems: 'center',
-  },
-  historyBtnText: { fontSize: 15, color: colors.textMuted, fontFamily: fonts.bodyMedium },
-});

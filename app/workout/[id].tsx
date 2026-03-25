@@ -8,7 +8,7 @@ import { Check, X, ChevronDown, ChevronUp, Info } from 'lucide-react-native';
 import { WorkoutTemplate, ExerciseLog, SetLog } from '../../types';
 import { getTemplate, saveSession, getLastWeights } from '../../lib/db';
 import { ExerciseImage } from '../../components/ExerciseImage';
-import { colors, fonts } from '../../lib/theme';
+import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
 
 function SetRow({
@@ -22,6 +22,28 @@ function SetRow({
   lastWeight?: number;
   onChange: (set: SetLog) => void;
 }) {
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    setRow: {
+      flexDirection: 'row', alignItems: 'center', gap: 8,
+      paddingVertical: 6, borderRadius: 8, paddingHorizontal: 4,
+    },
+    setRowDone: { backgroundColor: colors.accentSurface },
+    setNumber: { width: 20, fontSize: 13, color: colors.textDisabled, textAlign: 'center', fontFamily: fonts.body },
+    setField: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 },
+    setLabel: { fontSize: 11, color: colors.textDisabled, fontFamily: fonts.body },
+    setInput: {
+      flex: 1, backgroundColor: colors.surface2, borderRadius: 6, padding: 6,
+      color: colors.text, fontSize: 15, fontFamily: fonts.bodyMedium, textAlign: 'center',
+      borderWidth: 1, borderColor: colors.border,
+    },
+    checkBtn: {
+      width: 32, height: 32, borderRadius: 8, borderWidth: 1, borderColor: colors.border,
+      alignItems: 'center', justifyContent: 'center',
+    },
+    checkBtnDone: { backgroundColor: colors.accent, borderColor: colors.accent },
+  });
+
   return (
     <View style={[styles.setRow, set.completed && styles.setRowDone]}>
       <Text style={styles.setNumber}>{index + 1}</Text>
@@ -71,6 +93,35 @@ function ExercisePanel({
   lastWeights: Record<number, any>;
   onChange: (log: ExerciseLog) => void;
 }) {
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    exercisePanel: {
+      backgroundColor: colors.surface, borderRadius: 14,
+      borderWidth: 1, borderColor: colors.border, overflow: 'hidden',
+    },
+    exercisePanelDone: { borderColor: colors.accentBorder },
+    exerciseHeader: {
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+      padding: 14, gap: 12,
+    },
+    exerciseHeaderLeft: { flex: 1 },
+    exerciseName: { fontSize: 16, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 2 },
+    exerciseMeta: { fontSize: 12, color: colors.textSubtle, fontFamily: fonts.body },
+    exerciseHeaderRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    donePill: {
+      backgroundColor: colors.accent, borderRadius: 10,
+      paddingHorizontal: 6, paddingVertical: 2,
+    },
+    donePillText: { fontSize: 11, color: colors.bg, fontFamily: fonts.bodyBold },
+    setsProgress: { fontSize: 13, color: colors.textSubtle, fontFamily: fonts.body },
+    setsContainer: { padding: 14, paddingTop: 0 },
+    setHeader: {
+      flexDirection: 'row', paddingBottom: 6,
+      borderBottomWidth: 1, borderBottomColor: colors.border, marginBottom: 6,
+    },
+    setLabel: { fontSize: 11, color: colors.textDisabled, fontFamily: fonts.body },
+  });
+
   const [expanded, setExpanded] = useState(true);
   const lastWeight = lastWeights[log.exerciseId]?.weight;
   const completedSets = log.sets.filter(s => s.completed).length;
@@ -139,6 +190,19 @@ export default function WorkoutScreen() {
   const [lastWeights, setLastWeights] = useState<Record<number, any>>({});
   const [startTime] = useState(Date.now());
   const [finished, setFinished] = useState(false);
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bg },
+    progressBar: { height: 3, backgroundColor: colors.surface },
+    progressFill: { height: 3, backgroundColor: colors.accent, borderRadius: 2 },
+    progressText: { fontSize: 12, color: colors.textSubtle, textAlign: 'center', paddingVertical: 6, fontFamily: fonts.body },
+    list: { padding: 16, gap: 12, paddingBottom: 40 },
+    finishBtn: {
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
+      backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
+    },
+    finishText: { fontSize: 16, fontFamily: fonts.bodyBold, color: colors.bg },
+  });
 
   useEffect(() => {
     loadWorkout();
@@ -242,58 +306,3 @@ export default function WorkoutScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
-  progressBar: { height: 3, backgroundColor: colors.surface },
-  progressFill: { height: 3, backgroundColor: colors.accent, borderRadius: 2 },
-  progressText: { fontSize: 12, color: colors.textSubtle, textAlign: 'center', paddingVertical: 6, fontFamily: fonts.body },
-  list: { padding: 16, gap: 12, paddingBottom: 40 },
-  exercisePanel: {
-    backgroundColor: colors.surface, borderRadius: 14,
-    borderWidth: 1, borderColor: colors.border, overflow: 'hidden',
-  },
-  exercisePanelDone: { borderColor: colors.accentBorder },
-  exerciseHeader: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    padding: 14, gap: 12,
-  },
-  exerciseHeaderLeft: { flex: 1 },
-  exerciseName: { fontSize: 16, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 2 },
-  exerciseMeta: { fontSize: 12, color: colors.textSubtle, fontFamily: fonts.body },
-  exerciseHeaderRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  donePill: {
-    backgroundColor: colors.accent, borderRadius: 10,
-    paddingHorizontal: 6, paddingVertical: 2,
-  },
-  donePillText: { fontSize: 11, color: colors.bg, fontFamily: fonts.bodyBold },
-  setsProgress: { fontSize: 13, color: colors.textSubtle, fontFamily: fonts.body },
-  setsContainer: { padding: 14, paddingTop: 0 },
-  setHeader: {
-    flexDirection: 'row', paddingBottom: 6,
-    borderBottomWidth: 1, borderBottomColor: colors.border, marginBottom: 6,
-  },
-  setRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 8,
-    paddingVertical: 6, borderRadius: 8, paddingHorizontal: 4,
-  },
-  setRowDone: { backgroundColor: colors.accentSurface },
-  setNumber: { width: 20, fontSize: 13, color: colors.textDisabled, textAlign: 'center', fontFamily: fonts.body },
-  setField: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 },
-  setLabel: { fontSize: 11, color: colors.textDisabled, fontFamily: fonts.body },
-  setInput: {
-    flex: 1, backgroundColor: colors.surface2, borderRadius: 6, padding: 6,
-    color: colors.text, fontSize: 15, fontFamily: fonts.bodyMedium, textAlign: 'center',
-    borderWidth: 1, borderColor: colors.border,
-  },
-  checkBtn: {
-    width: 32, height: 32, borderRadius: 8, borderWidth: 1, borderColor: colors.border,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  checkBtnDone: { backgroundColor: colors.accent, borderColor: colors.accent },
-  finishBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
-    backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
-  },
-  finishText: { fontSize: 16, fontFamily: fonts.bodyBold, color: colors.bg },
-});

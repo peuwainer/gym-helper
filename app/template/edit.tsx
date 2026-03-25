@@ -7,7 +7,7 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Plus, Trash2, Check } from 'lucide-react-native';
 import { WorkoutTemplate, WorkoutExercise } from '../../types';
 import { getTemplate, saveTemplate, updateTemplate } from '../../lib/db';
-import { colors, fonts } from '../../lib/theme';
+import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
 
 const EMPTY_EXERCISE: WorkoutExercise = {
@@ -26,6 +26,38 @@ export default function EditTemplateScreen() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [exercises, setExercises] = useState<WorkoutExercise[]>([{ ...EMPTY_EXERCISE, exercise: { ...EMPTY_EXERCISE.exercise, id: Date.now() } }]);
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bg },
+    content: { padding: 20, gap: 12, paddingBottom: 60 },
+    field: { gap: 6 },
+    label: { fontSize: 12, fontFamily: fonts.bodyMedium, color: colors.textSubtle, textTransform: 'uppercase', letterSpacing: 0.8 },
+    input: {
+      backgroundColor: colors.surface, borderRadius: 10, padding: 12,
+      color: colors.text, fontSize: 15, borderWidth: 1, borderColor: colors.border,
+      fontFamily: fonts.body,
+    },
+    inputMulti: { minHeight: 70, textAlignVertical: 'top' },
+    sectionTitle: { fontSize: 14, fontFamily: fonts.displayMedium, color: colors.accent, marginTop: 8, letterSpacing: 0.5 },
+    exerciseCard: {
+      backgroundColor: colors.surface, borderRadius: 14,
+      borderWidth: 1, borderColor: colors.border, padding: 14, gap: 8,
+    },
+    exerciseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    exerciseNumber: { fontSize: 13, fontFamily: fonts.display, color: colors.accent },
+    row: { flexDirection: 'row', gap: 8 },
+    addBtn: {
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+      borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed',
+      padding: 14, borderRadius: 12,
+    },
+    addBtnText: { color: colors.accent, fontSize: 15, fontFamily: fonts.bodyMedium },
+    saveBtn: {
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
+      backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
+    },
+    saveBtnText: { fontSize: 16, fontFamily: fonts.bodyBold, color: colors.bg },
+  });
 
   useEffect(() => {
     if (id) {
@@ -192,35 +224,3 @@ export default function EditTemplateScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: 20, gap: 12, paddingBottom: 60 },
-  field: { gap: 6 },
-  label: { fontSize: 12, fontFamily: fonts.bodyMedium, color: colors.textSubtle, textTransform: 'uppercase', letterSpacing: 0.8 },
-  input: {
-    backgroundColor: colors.surface, borderRadius: 10, padding: 12,
-    color: colors.text, fontSize: 15, borderWidth: 1, borderColor: colors.border,
-    fontFamily: fonts.body,
-  },
-  inputMulti: { minHeight: 70, textAlignVertical: 'top' },
-  sectionTitle: { fontSize: 14, fontFamily: fonts.displayMedium, color: colors.accent, marginTop: 8, letterSpacing: 0.5 },
-  exerciseCard: {
-    backgroundColor: colors.surface, borderRadius: 14,
-    borderWidth: 1, borderColor: colors.border, padding: 14, gap: 8,
-  },
-  exerciseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  exerciseNumber: { fontSize: 13, fontFamily: fonts.display, color: colors.accent },
-  row: { flexDirection: 'row', gap: 8 },
-  addBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-    borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed',
-    padding: 14, borderRadius: 12,
-  },
-  addBtnText: { color: colors.accent, fontSize: 15, fontFamily: fonts.bodyMedium },
-  saveBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
-    backgroundColor: colors.accent, padding: 16, borderRadius: 14, marginTop: 8,
-  },
-  saveBtnText: { fontSize: 16, fontFamily: fonts.bodyBold, color: colors.bg },
-});

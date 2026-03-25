@@ -7,7 +7,7 @@ import { useFocusEffect } from 'expo-router';
 import { Eye, EyeOff, Check, Trash2 } from 'lucide-react-native';
 import { getApiKey, setApiKey, clearApiKey } from '../../lib/storage';
 import { clearChatHistory } from '../../lib/db';
-import { colors, fonts } from '../../lib/theme';
+import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
 
 export default function SettingsScreen() {
@@ -15,6 +15,49 @@ export default function SettingsScreen() {
   const [apiKey, setApiKeyState] = useState('');
   const [saved, setSaved] = useState(false);
   const [showKey, setShowKey] = useState(false);
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bg },
+    content: { padding: 20, gap: 8, paddingBottom: 60 },
+    section: {
+      backgroundColor: colors.surface, borderRadius: 14,
+      borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10,
+      marginBottom: 12,
+    },
+    sectionTitle: { fontSize: 13, fontFamily: fonts.displayMedium, color: colors.accent, textTransform: 'uppercase', letterSpacing: 1.2 },
+    sectionDesc: { fontSize: 13, color: colors.textMuted, lineHeight: 19, fontFamily: fonts.body },
+    inputRow: {
+      flexDirection: 'row', alignItems: 'center', gap: 8,
+      backgroundColor: colors.surface2, borderRadius: 10,
+      borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12,
+    },
+    input: { flex: 1, color: colors.text, fontSize: 14, paddingVertical: 12, fontFamily: fonts.body },
+    eyeBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+    keyActions: { flexDirection: 'row', gap: 10 },
+    saveBtn: {
+      flexDirection: 'row', alignItems: 'center', gap: 6,
+      backgroundColor: colors.accent, paddingHorizontal: 20, paddingVertical: 10,
+      borderRadius: 8,
+    },
+    saveBtnSaved: { backgroundColor: colors.accentDark },
+    saveBtnText: { color: colors.bg, fontFamily: fonts.bodyBold, fontSize: 14 },
+    clearKeyBtn: {
+      borderWidth: 1, borderColor: colors.border, paddingHorizontal: 16, paddingVertical: 10,
+      borderRadius: 8, alignItems: 'center', justifyContent: 'center',
+    },
+    clearKeyText: { color: colors.textMuted, fontSize: 14, fontFamily: fonts.body },
+    hint: {
+      backgroundColor: colors.surface2, borderRadius: 8, padding: 12,
+      borderWidth: 1, borderColor: colors.border,
+    },
+    hintText: { fontSize: 12, color: colors.textSubtle, lineHeight: 18, fontFamily: fonts.body },
+    dangerBtn: {
+      flexDirection: 'row', alignItems: 'center', gap: 10,
+      padding: 12, borderRadius: 8, borderWidth: 1, borderColor: colors.border,
+    },
+    dangerText: { color: colors.error, fontSize: 14, fontFamily: fonts.body },
+    aboutText: { fontSize: 13, color: colors.textSubtle, lineHeight: 22, fontFamily: fonts.body },
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -130,46 +173,3 @@ export default function SettingsScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: 20, gap: 8, paddingBottom: 60 },
-  section: {
-    backgroundColor: colors.surface, borderRadius: 14,
-    borderWidth: 1, borderColor: colors.border, padding: 16, gap: 10,
-    marginBottom: 12,
-  },
-  sectionTitle: { fontSize: 13, fontFamily: fonts.displayMedium, color: colors.accent, textTransform: 'uppercase', letterSpacing: 1.2 },
-  sectionDesc: { fontSize: 13, color: colors.textMuted, lineHeight: 19, fontFamily: fonts.body },
-  inputRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 8,
-    backgroundColor: colors.surface2, borderRadius: 10,
-    borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12,
-  },
-  input: { flex: 1, color: colors.text, fontSize: 14, paddingVertical: 12, fontFamily: fonts.body },
-  eyeBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
-  keyActions: { flexDirection: 'row', gap: 10 },
-  saveBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: colors.accent, paddingHorizontal: 20, paddingVertical: 10,
-    borderRadius: 8,
-  },
-  saveBtnSaved: { backgroundColor: colors.accentDark },
-  saveBtnText: { color: colors.bg, fontFamily: fonts.bodyBold, fontSize: 14 },
-  clearKeyBtn: {
-    borderWidth: 1, borderColor: colors.border, paddingHorizontal: 16, paddingVertical: 10,
-    borderRadius: 8, alignItems: 'center', justifyContent: 'center',
-  },
-  clearKeyText: { color: colors.textMuted, fontSize: 14, fontFamily: fonts.body },
-  hint: {
-    backgroundColor: colors.surface2, borderRadius: 8, padding: 12,
-    borderWidth: 1, borderColor: colors.border,
-  },
-  hintText: { fontSize: 12, color: colors.textSubtle, lineHeight: 18, fontFamily: fonts.body },
-  dangerBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 10,
-    padding: 12, borderRadius: 8, borderWidth: 1, borderColor: colors.border,
-  },
-  dangerText: { color: colors.error, fontSize: 14, fontFamily: fonts.body },
-  aboutText: { fontSize: 13, color: colors.textSubtle, lineHeight: 22, fontFamily: fonts.body },
-});

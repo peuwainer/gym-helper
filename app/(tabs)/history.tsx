@@ -7,7 +7,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { WorkoutSession } from '../../types';
 import { getSessions } from '../../lib/db';
 import { ChevronRight, Calendar } from 'lucide-react-native';
-import { colors, fonts } from '../../lib/theme';
+import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
 
 function formatDate(dateStr: string) {
@@ -23,6 +23,28 @@ function formatDate(dateStr: string) {
 }
 
 function SessionCard({ session, onPress }: { session: WorkoutSession; onPress: () => void }) {
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    card: {
+      flexDirection: 'row', alignItems: 'center', gap: 12,
+      backgroundColor: colors.surface, padding: 14, borderRadius: 14,
+      borderWidth: 1, borderColor: colors.border,
+    },
+    cardLeft: {},
+    dateBox: {
+      width: 44, alignItems: 'center',
+      backgroundColor: colors.bg, borderRadius: 8, padding: 6,
+    },
+    dateDay: { fontSize: 18, fontFamily: fonts.display, color: colors.accent, lineHeight: 20 },
+    dateMonth: { fontSize: 11, color: colors.textSubtle, textTransform: 'uppercase', fontFamily: fonts.bodyMedium },
+    cardInfo: { flex: 1 },
+    cardRelDate: { fontSize: 12, color: colors.textSubtle, marginBottom: 2, fontFamily: fonts.body },
+    cardExercises: { fontSize: 14, color: colors.textSecondary, marginBottom: 4, lineHeight: 20, fontFamily: fonts.body },
+    cardMeta: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 4 },
+    metaText: { fontSize: 12, color: colors.textSubtle, fontFamily: fonts.body },
+    metaDot: { fontSize: 12, color: colors.textDisabled, fontFamily: fonts.body },
+  });
+
   const completedSets = session.exercises.reduce((acc, ex) =>
     acc + ex.sets.filter(s => s.completed).length, 0
   );
@@ -71,6 +93,15 @@ export default function HistoryScreen() {
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const router = useRouter();
 
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bg },
+    list: { padding: 16, gap: 10, paddingBottom: 32 },
+    empty: { alignItems: 'center', paddingTop: 80, paddingHorizontal: 32 },
+    emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
+    emptyTitle: { fontSize: 17, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 8 },
+    emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22, fontFamily: fonts.body },
+  });
+
   useFocusEffect(
     useCallback(() => {
       getSessions().then(setSessions);
@@ -104,30 +135,3 @@ export default function HistoryScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
-  list: { padding: 16, gap: 10, paddingBottom: 32 },
-  card: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    backgroundColor: colors.surface, padding: 14, borderRadius: 14,
-    borderWidth: 1, borderColor: colors.border,
-  },
-  cardLeft: {},
-  dateBox: {
-    width: 44, alignItems: 'center',
-    backgroundColor: colors.bg, borderRadius: 8, padding: 6,
-  },
-  dateDay: { fontSize: 18, fontFamily: fonts.display, color: colors.accent, lineHeight: 20 },
-  dateMonth: { fontSize: 11, color: colors.textSubtle, textTransform: 'uppercase', fontFamily: fonts.bodyMedium },
-  cardInfo: { flex: 1 },
-  cardRelDate: { fontSize: 12, color: colors.textSubtle, marginBottom: 2, fontFamily: fonts.body },
-  cardExercises: { fontSize: 14, color: colors.textSecondary, marginBottom: 4, lineHeight: 20, fontFamily: fonts.body },
-  cardMeta: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 4 },
-  metaText: { fontSize: 12, color: colors.textSubtle, fontFamily: fonts.body },
-  metaDot: { fontSize: 12, color: colors.textDisabled, fontFamily: fonts.body },
-  empty: { alignItems: 'center', paddingTop: 80, paddingHorizontal: 32 },
-  emptyIconWrap: { width: 56, height: 56, borderRadius: 16, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
-  emptyTitle: { fontSize: 17, fontFamily: fonts.displayMedium, color: colors.text, marginBottom: 8 },
-  emptyText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22, fontFamily: fonts.body },
-});
