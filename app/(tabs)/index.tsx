@@ -255,7 +255,7 @@ export default function ChatScreen() {
       keyboardVerticalOffset={0}
     >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Treinador IA</Text>
+        <Text style={styles.headerTitle}>TreinaClaude</Text>
         {messages.length > 0 && (
           <TouchableOpacity onPress={handleClear}>
             <Trash2 size={18} color={colors.textSubtle} />

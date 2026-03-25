@@ -198,7 +198,7 @@ export default function SettingsScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Sobre</Text>
         <Text style={styles.aboutText}>Gym Helper v1.0</Text>
-        <Text style={styles.aboutText}>Treinador IA powered by Claude (Anthropic)</Text>
+        <Text style={styles.aboutText}>TreinaClaude powered by Anthropic</Text>
         <Text style={styles.aboutText}>Exercícios: wger REST API</Text>
       </View>
     </ScrollView>
