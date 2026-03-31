@@ -10,6 +10,7 @@ import { getTemplate, saveSession, getLastWeights } from '../../lib/db';
 import { ExerciseImage } from '../../components/ExerciseImage';
 import { fonts } from '../../lib/theme';
 import { useTheme } from '../../lib/ThemeContext';
+import { getWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../../lib/storage';
 
 function SetRow({
   set,
@@ -184,18 +185,32 @@ function ExercisePanel({
 export default function WorkoutScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const templateId = Number(id);
   const router = useRouter();
   const [template, setTemplate] = useState<WorkoutTemplate | null>(null);
   const [logs, setLogs] = useState<ExerciseLog[]>([]);
   const [lastWeights, setLastWeights] = useState<Record<number, any>>({});
-  const [startTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(Date.now());
   const [finished, setFinished] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showDraftRestored, setShowDraftRestored] = useState(false);
 
   const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.bg },
     progressBar: { height: 3, backgroundColor: colors.surface },
     progressFill: { height: 3, backgroundColor: colors.accent, borderRadius: 2 },
     progressText: { fontSize: 12, color: colors.textSubtle, textAlign: 'center', paddingVertical: 6, fontFamily: fonts.body },
+    draftRestoredBanner: {
+      alignSelf: 'center',
+      backgroundColor: colors.accentSurface,
+      borderColor: colors.accentBorder,
+      borderWidth: 1,
+      borderRadius: 999,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      marginBottom: 6,
+    },
+    draftRestoredText: { fontSize: 12, color: colors.accent, fontFamily: fonts.bodyBold },
     list: { padding: 16, gap: 12, paddingBottom: 40 },
     finishBtn: {
       flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
@@ -206,10 +221,32 @@ export default function WorkoutScreen() {
 
   useEffect(() => {
     loadWorkout();
-  }, [id]);
+  }, [templateId]);
+
+  useEffect(() => {
+    if (!isLoaded || !Number.isFinite(templateId) || !logs.length || finished) return;
+
+    const timeout = setTimeout(() => {
+      saveWorkoutDraft(templateId, startTime, logs).catch(() => {
+        // Silent fail: autosave must never block the workout flow.
+      });
+    }, 250);
+
+    return () => clearTimeout(timeout);
+  }, [templateId, logs, startTime, finished, isLoaded]);
+
+  useEffect(() => {
+    if (!showDraftRestored) return;
+
+    const timeout = setTimeout(() => setShowDraftRestored(false), 3000);
+    return () => clearTimeout(timeout);
+  }, [showDraftRestored]);
 
   async function loadWorkout() {
-    const t = await getTemplate(parseInt(id));
+    if (!Number.isFinite(templateId)) return;
+
+    setIsLoaded(false);
+    const t = await getTemplate(templateId);
     if (!t) return;
     setTemplate(t);
 
@@ -229,7 +266,19 @@ export default function WorkoutScreen() {
         completed: false,
       })),
     }));
-    setLogs(initialLogs);
+
+    const draft = await getWorkoutDraft(templateId);
+    if (draft && isDraftCompatible(t, draft.logs)) {
+      setLogs(draft.logs);
+      setStartTime(draft.startedAt);
+      setShowDraftRestored(true);
+    } else {
+      setLogs(initialLogs);
+      setStartTime(Date.now());
+      setShowDraftRestored(false);
+    }
+
+    setIsLoaded(true);
   }
 
   function updateLog(index: number, log: ExerciseLog) {
@@ -249,12 +298,13 @@ export default function WorkoutScreen() {
     const durationMinutes = Math.round((Date.now() - startTime) / 60000);
 
     const sessionId = await saveSession({
-      templateId: parseInt(id),
+      templateId,
       date: new Date().toISOString(),
       durationMinutes,
       exercises: logs,
     });
 
+    await clearWorkoutDraft(templateId);
     setFinished(true);
     router.push(`/debrief/${sessionId}`);
   }
@@ -286,6 +336,11 @@ export default function WorkoutScreen() {
         <Text style={styles.progressText}>
           {completedCount}/{logs.length} exercícios completos
         </Text>
+        {showDraftRestored && (
+          <View style={styles.draftRestoredBanner}>
+            <Text style={styles.draftRestoredText}>Rascunho restaurado</Text>
+          </View>
+        )}
 
         <ScrollView contentContainerStyle={styles.list}>
           {logs.map((log, i) => (
@@ -305,4 +360,19 @@ export default function WorkoutScreen() {
       </View>
     </>
   );
+}
+
+function isDraftCompatible(template: WorkoutTemplate, draftLogs: ExerciseLog[]): boolean {
+  if (template.exercises.length !== draftLogs.length) return false;
+
+  return template.exercises.every((exercise, index) => {
+    const draftExercise = draftLogs[index];
+    if (!draftExercise) return false;
+    return (
+      exercise.exercise.id === draftExercise.exerciseId &&
+      exercise.sets === draftExercise.targetSets &&
+      exercise.reps === draftExercise.targetReps &&
+      draftExercise.sets.length === exercise.sets
+    );
+  });
 }
